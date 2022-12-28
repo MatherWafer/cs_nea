@@ -5,6 +5,7 @@ import ViewStats from'./students/viewstats.js'
 import ViewAssignments from './students/viewAssignments.js'
 import StartPractice from './students/startPractice.js'
 import TeacherLogin from './teachers/teacherLogin.js'
+import TeacherRegistration from './teachers/teacherRegistration.js'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
 import {
@@ -13,7 +14,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import getCookie from './cookieutils.js'
+import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
 
 
 
@@ -37,11 +38,12 @@ function App() {
           <Route path='/' element={<Homepage/>}/>
           <Route path='/registration' element= {<Registration/>}/>
           <Route path='/login' element={<Login/>}/>
-          <Route path='/view-stats' element={<ViewStats/>}/>
-          <Route path='/assignments' element={<ViewAssignments/>}/>
-          <Route path='/skills' element={<ViewStats/>}/>
-          <Route path='/startPractice' element={<StartPractice/>}/>
+          <Route path='/view-stats' element={<StudentTab component={<ViewStats/>}/>}/>
+          <Route path='/assignments' element={<StudentTab component={<ViewAssignments/>}/>}/>
+          <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
+          <Route path='/startPractice' element={<StudentTab component={<StartPractice/>}/>}/>
           <Route path='/teacher-login' element={<TeacherLogin/>}/>
+          <Route path='teacher-register' element={<TeacherRegistration/>}/>
         </Routes>
       </div>
     </Router>

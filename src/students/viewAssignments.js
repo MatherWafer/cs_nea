@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { json } from "react-router-dom";
-import getCookie from '../cookieutils.js';
+import {getCookie} from '../variousUtils.js'
 function ViewAssignments(){
     const user = getCookie("userName")
     const [assignmentList,setAssignmentList] = useState([])

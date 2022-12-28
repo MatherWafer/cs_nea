@@ -27,11 +27,23 @@ def make_user():
         return {"status":200}
     except conn.IntegrityError:
         return {"status":409}
-    """
-    except:
-        return{"status":200,
-               "submittedID": "anushka smells"}
-    """
+
+@app.route('/teacher-register',methods=(['POST']))
+def make_teacher():
+    request_data = json.loads(request.data)
+    this_id = request_data["teacherID"]
+    this_pwd = request_data["pwd"]
+    this_forename = request_data["forename"]
+    this_surname = request_data["surname"]
+    hashed_pwd = generate_password_hash(this_pwd)
+    conn = get_db()
+    try:
+        conn.execute(f"""INSERT INTO tblTeacher \nVALUES ("{this_id}","{this_forename}","{this_surname}","{hashed_pwd}");""")
+        conn.commit()
+        return {"status":200}
+    except conn.IntegrityError:
+        return {"status":409}
+
 
 @app.route('/manageClasses',methods=(['POST']))
 def make_class():

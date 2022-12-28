@@ -1,4 +1,4 @@
-
+import {Navigate} from "react-router-dom"
 function getCookie(nameOfCookie){
     let nameToFind = nameOfCookie +"=";
     let cleanedCookie = decodeURIComponent(document.cookie)
@@ -18,4 +18,17 @@ function getCookie(nameOfCookie){
     }
 }
 
-export default getCookie;
+const TeacherTab = ({component}) => {
+    if (getCookie("isTeacher") === "true"){
+        return component
+    }
+    return <Navigate to="/teacher-login" replace/>
+}
+
+const StudentTab = ({component}) => {
+    if (getCookie("userName") !== "notSet" && getCookie("isTeacher") === "false"){
+        return component
+    }
+    return <Navigate to="/login" replace/>
+}
+export {getCookie,TeacherTab,StudentTab};

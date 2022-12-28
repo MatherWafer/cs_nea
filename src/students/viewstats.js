@@ -1,5 +1,5 @@
 import { json } from "react-router-dom";
-import getCookie from '../cookieutils.js';
+import {getCookie} from '../variousUtils.js'
 import { useState } from "react";
 function ViewStats(){
     const user = getCookie("userName")

@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import getCookie from '../cookieutils.js'
+import {getCookie} from '../variousUtils.js'
 import {
     BrowserRouter as Router,
     Routes,

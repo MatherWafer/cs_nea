@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import {Link} from "react-router-dom"
-import getCookie from '../cookieutils.js';
+import {getCookie} from '../variousUtils.js'
 
-function Login(){
+function TeacherLogin(){
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [response,setResponse] = useState(0)
@@ -41,6 +41,7 @@ function Login(){
                 document.cookie = `userName=${studentData.TeacherID}`
                 document.cookie = `forename=${studentData.Forename}`
                 document.cookie = `surname=${studentData.Surname}`
+                document.cookie = "isTeacher=true"
             }
             else if(resJson.status === 400){
                 console.log("Incorrect Password")
@@ -60,6 +61,7 @@ function Login(){
         <div className='App'>
             <header className="App-header">
                 <h1>Teacher log in:</h1>
+                <li><Link to="/teacher-register">Teacher Register</Link></li>
                 <form onSubmit={submitLoginDetails}>
                     <input type="text"
                         value={username}
@@ -89,4 +91,4 @@ function Login(){
     
 }
 
-export default Login;
+export default TeacherLogin;

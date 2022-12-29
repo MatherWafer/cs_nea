@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {Link} from "react-router-dom"
+import {Link, Navigate} from "react-router-dom"
 import {getCookie} from '../variousUtils.js'
 
 function Login(){
@@ -7,13 +7,10 @@ function Login(){
     const [password,setPassword] = useState("")
     const [response,setResponse] = useState(0)
 
-    const msgs =  {200: (   <>
-                            <p style={{color:"#00CC00"}}>Welcome!</p>
-                            <li><Link to='/'>Access Homepage</Link></li>
-                            </>),
-             209: <p style={{color:"white"}}>That username does not exist</p>,
+    const msgs =  
+            {209: <p style={{color:"white"}}>That username does not exist</p>,
              400: <p style={{color:"#CC0000"}}>Incorrect Password.</p>
-    }
+            }
 
     const submitLoginDetails = async (event) => {
         console.log("Here we go");
@@ -83,7 +80,7 @@ function Login(){
         :
         <header className='App-header'>
             <h1>Logged in!</h1>
-            <li><Link to="/">Homepage</Link></li>
+            <li><Navigate to="/">Homepage</Navigate></li>
         </header>
     
 

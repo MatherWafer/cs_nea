@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react';
-import {Link} from "react-router-dom"
+import {Link,Navigate} from "react-router-dom"
 import {getCookie} from '../variousUtils.js'
 
-function TeacherLogin(){
+function TeacherLogin({setIsTeacher}){
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [response,setResponse] = useState(0)
@@ -41,6 +41,7 @@ function TeacherLogin(){
                 document.cookie = `userName=${studentData.TeacherID}`
                 document.cookie = `forename=${studentData.Forename}`
                 document.cookie = `surname=${studentData.Surname}`
+                setIsTeacher(true)
                 document.cookie = "isTeacher=true"
             }
             else if(resJson.status === 400){
@@ -83,8 +84,7 @@ function TeacherLogin(){
 
         :
         <header className='App-header'>
-            <h1>Logged in!</h1>
-            <li><Link to="/">Homepage</Link></li>
+            <Navigate to="/teacher-homepage">Homepage</Navigate>
         </header>
     
 

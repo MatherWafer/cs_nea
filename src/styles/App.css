@@ -13,6 +13,27 @@
   }
 }
 
+.listContent{
+  background-color:#530c0c;
+  color: rgb(255, 255, 255);
+  padding: 20px;
+  outline: solid;
+  outline-color:black
+}
+
+.listContent p {
+  color: #DDDDDD;
+  text-align:center
+}
+
+.listContent a:link{
+  color: rgb(54, 48, 171);
+}
+
+.listContent a:visited{
+  color:rgb(54, 48, 171);
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

@@ -45,16 +45,18 @@ def make_teacher():
         return {"status":409}
 
 
-@app.route('/manageClasses',methods=(['POST']))
+@app.route('/create-class',methods=(['POST']))
 def make_class():
     request_data = json.loads(request.data)
-    this_id = request_data["classID"]
+    this_classID = request_data["classID"]
     this_className = request_data["className"]
+    this_teacherID = request_data["teacherID"]
     conn = get_db()
     try:
-        conn.execute(f"""INSERT INTO tblClass \nVALUES("{this_id}", "{this_className}")""")
+        conn.execute(f"""INSERT INTO tblClass \nVALUES("{this_classID}", "{this_className}", "{this_teacherID}")""")
         conn.commit()
-        return {"status":200}
+        return {"status":200,
+                "submittedID":this_classID}
     except conn.IntegrityError:
         return {"status":409}
 
@@ -114,5 +116,29 @@ def get_skills():
            "skills":skills}
 
 
+@app.route('/select-class',methods=(['GET']))
+def get_classes():
+    this_id = request.args.get('user',type = str)
+    conn = get_db()
+    classes = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT ClassID, ClassName from tblClass WHERE TeacherID = "{this_id}" """) ])
+    return{"status":200,
+           "classes":classes }
+
+@app.route('/get-students',methods=(['GET']))
+def get_students():
+    this_id = request.args.get('class', type = str)
+    conn = get_db()
+    students = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)])
+    return{"status":200,
+           "students":students}
+
+
+@app.route('/get-assignments',methods=(['GET']))
+def get_assignments_for_class():
+    this_id = request.args.get('class', type = str)
+    conn = get_db()
+    assignments = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT AssignmentID, NoOfQuestions from tblAssignment WHERE ClassID = "{this_id}" """)])
+    return{"status":200,
+           "assignments":assignments}
 #REFACTOR WEBSITE => TWO NAVS FOR STUDENT / TEACHER??
 #

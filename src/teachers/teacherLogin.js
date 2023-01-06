@@ -7,10 +7,7 @@ function TeacherLogin({setIsTeacher}){
     const [password,setPassword] = useState("")
     const [response,setResponse] = useState(0)
 
-    const msgs =  {200: (   <>
-                            <p style={{color:"#00CC00"}}>Welcome!</p>
-                            <li><Link to='/'>Access Homepage</Link></li>
-                            </>),
+    const msgs =  {
              209: <p style={{color:"white"}}>That username does not exist</p>,
              400: <p style={{color:"#CC0000"}}>Incorrect Password.</p>
     }

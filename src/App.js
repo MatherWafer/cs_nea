@@ -7,8 +7,15 @@ import StartPractice from './students/startPractice.js'
 import TeacherLogin from './teachers/teacherLogin.js'
 import TeacherRegistration from './teachers/teacherRegistration.js'
 import TeacherHomepage from './teachers/teacherHomepage.js'
+import ClassesNav from './teachers/classes/classesNav.js'
+import CreateClass from './teachers/classes/createClass.js'
+import SelectClass from './teachers/classes/selectClass.js'
+import ManageClass from './teachers/classes/manageClass.js'
+import AssignmentsNav from './teachers/assignments/assignmentsNav.js'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
+
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,6 +23,7 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
+
 
 
 
@@ -44,6 +52,10 @@ function App() {
       <div style={{backgroundColor:"#222222"}}>
         <Navbar></Navbar>
         <Routes>
+
+          {/*
+            ROUTES FOR STUDENT SIDE
+          */}
           <Route path='/' element={<Homepage/>}/>
           <Route path='/registration' element= {<Registration/>}/>
           <Route path='/login' element={<Login/>}/>
@@ -51,9 +63,27 @@ function App() {
           <Route path='/assignments' element={<StudentTab component={<ViewAssignments/>}/>}/>
           <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
           <Route path='/startPractice' element={<StudentTab component={<StartPractice/>}/>}/>
+
+
+          {/*
+          --------------------------------------------------------------------------------------------------------------------
+            ROUTES FOR TEACHER SIDE
+          */}
+
           <Route path='/teacher-login' element={<TeacherLogin setIsTeacher={setIsTeacher}/>}/>
           <Route path='/teacher-register' element={<TeacherRegistration/>}/>
-          <Route path='teacher-homepage' element={<TeacherTab component={<TeacherHomepage/>}/>}/>
+          <Route path='/teacher-homepage' element={<TeacherTab component={<TeacherHomepage/>}/>}/>
+          {/*
+            Routes for teacher class functionality
+          */}
+          <Route path='/classes-nav' element={<TeacherTab component= {<ClassesNav/>}/>}/>
+          <Route path='/create-class' element={<TeacherTab component={<CreateClass/>}/>}/>
+          <Route path='/select-class' element={<TeacherTab component={<SelectClass/>}/>}/>
+          <Route path='/manage-class' element={<TeacherTab component={<ManageClass/>}/>}/>
+          {/*
+            Routes for assignment functionality
+          */}
+          <Route path="/assignments-nav" element={<TeacherTab component={<AssignmentsNav/>}/>}/>
         </Routes>
       </div>
     </Router>

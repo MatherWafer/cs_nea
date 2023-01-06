@@ -1,0 +1,14 @@
+View submissions per user:
+    ->Mark submissions
+    ->Return to users
+    -> SELECT * from tblAssignmentSubmission WHERE AssignmentID = {this_assignmentID} AND StudentID = {this_studentID}
+    -> Sort in order of sequence.
+    FOR EACH SUBMISSION:
+        Mark as right or wrong.
+    When finished:
+        API updates students scores per topic
+See who has submitted:
+    ->Highlight work given on time in green
+    ->Highlight late work in orange
+    ->Highlight outstanding work in red
+

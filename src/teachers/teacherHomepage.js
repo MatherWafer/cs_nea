@@ -2,8 +2,6 @@ import React, { useState, useEffect} from 'react';
 import {getCookie} from '../variousUtils.js'
 import {
     BrowserRouter as Router,
-    Routes,
-    Route,
     Link
   } from "react-router-dom";
   
@@ -30,8 +28,8 @@ function TeacherHomepage (){
                 <header className='App-header'>
                     <h1>Hi {forename} {surname}</h1>
                     <p>YIPPEE!</p> 
-                    <li><Link to="/manage-assignments">Manage Assignments</Link></li>
-                    <li><Link to="/classes">classes</Link></li>
+                    <a><Link to="/assignments-nav">Assignments</Link></a>
+                    <a><Link to="/classes-nav">Classes</Link></a>
                 </header>
                 </div>
         )

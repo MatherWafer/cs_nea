@@ -124,13 +124,29 @@ def get_classes():
     return{"status":200,
            "classes":classes }
 
-@app.route('/get-students',methods=(['GET']))
+@app.route('/manage-class',methods=(['GET','PUT']))
 def get_students():
-    this_id = request.args.get('class', type = str)
-    conn = get_db()
-    students = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)])
-    return{"status":200,
-           "students":students}
+    if request.method == 'GET':
+        this_id = request.args.get('class', type = str)
+        conn = get_db()
+        students = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)])
+        return{"status":200,
+            "students":students}
+    else:              #method != GET => method = PUT
+        this_classID = request.args.get('class', type = str)
+        request_data = json.loads(request.data)
+        print(request_data)
+        this_studentID = request_data["studentID"]
+        print(this_studentID)
+        conn = get_db()
+        doesExist = conn.execute(f"""SELECT EXISTS(SELECT 1 FROM tblStudent WHERE StudentID = "{this_studentID}");""").fetchone()[0]
+        print(doesExist)
+        if doesExist == 0: return {"status":404}
+        conn.execute(f"""UPDATE tblStudent
+                            SET ClassID = "{this_classID}" WHERE StudentID = "{this_studentID}";""")
+        conn.commit()
+        return {"status":200}
+
 
 
 @app.route('/get-assignments',methods=(['GET']))

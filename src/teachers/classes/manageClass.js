@@ -13,7 +13,7 @@ async function getStudents(setStudents){
     let  URLParams = new URLSearchParams(window.location.search)
     let classID = URLParams.get('class')
 
-    let res = await fetch(`/get-students?class=${classID}`)
+    let res = await fetch(`/manage-class?class=${classID}`)
     let resJson = await res.json()
     let listOfStudents = resJson.students.map((x) => JSON.parse(x))
 
@@ -79,6 +79,12 @@ function ManageClass(){
             <button type="submit" onClick={() => getStudents(setStudents)}>Get students</button>
             <StudentList students={students}></StudentList>
             <button type="submit" onClick={() => getAssignments(setAssignments)}>Get assignments</button>
+            <button type="submit" onClick={() => fetch('/manage-class?class=TESTCLASS',{
+                method: 'PUT',
+                body:JSON.stringify({
+                    studentID:"ASDA"
+                })
+            })}> help me</button>
             <AssignmentList assignments ={assignments}></AssignmentList>
         </header>
     )

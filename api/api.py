@@ -132,11 +132,12 @@ def get_students():
         students = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)])
         return{"status":200,
             "students":students}
-    else:              #method != GET => method = PUT
-        this_classID = request.args.get('class', type = str)
+    elif request.method == 'PUT':
+        #method != GET => method = PUT
         request_data = json.loads(request.data)
         print(request_data)
         this_studentID = request_data["studentID"]
+        this_classID = request.args.get("class", type = str)
         print(this_studentID)
         conn = get_db()
         doesExist = conn.execute(f"""SELECT EXISTS(SELECT 1 FROM tblStudent WHERE StudentID = "{this_studentID}");""").fetchone()[0]
@@ -148,6 +149,41 @@ def get_students():
         return {"status":200}
 
 
+    
+@app.route('/enroll-student',methods=(['PUT']))
+def enrol_student():
+    #method != GET => method = PUT
+    request_data = json.loads(request.data)
+    this_studentID = request_data["studentID"]
+    this_classID = request.args.get("class", type = str)
+    conn = get_db()
+    doesExist = conn.execute(f"""SELECT EXISTS(SELECT 1 FROM tblStudent WHERE StudentID = "{this_studentID}");""").fetchone()[0]
+    if doesExist == 0: return {"status":404}
+    conn.execute(f"""UPDATE tblStudent
+                        SET ClassID = "{this_classID}" WHERE StudentID = "{this_studentID}";""")
+    conn.commit()
+    return {"status":200}
+
+
+@app.route('/create-assignment',methods=(['GET']))
+def create_assignment():
+    request_data = json.loads(request.data)
+    this_assignmentID = request_data["assignmentID"]
+    this_classID = request_data["classID"]
+    this_questionSetID = request_data["questionSetID"]
+    this_dateSet = request_data["dateSet"]
+    this_dateDue = request_data["dateDue"]
+    conn = get_db()
+    try:
+
+        conn.execute(f"""INSERT INTO tblAssignment
+                            VALUES("{this_assignmentID}", "{this_classID}", "{this_questionSetID}", "{this_dateSet}", "{this_dateDue}")""")
+        return{"status":200}
+    except conn.IntegrityError():
+        return {"status":409,
+                "errorType": "integrity"}
+
+                
 
 @app.route('/get-assignments',methods=(['GET']))
 def get_assignments_for_class():

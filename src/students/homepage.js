@@ -6,7 +6,7 @@ import {
     Route,
     Link
   } from "react-router-dom";
-  
+var Latex = require('react-latex');
 function Homepage (){
     console.log(getCookie("userName"))
     console.log(document.cookie)
@@ -30,6 +30,9 @@ function Homepage (){
                 <header className='App-header'>
                     <h1>Hi {forename} {surname}</h1>
                     <p>YIPPEE!</p> 
+                        <p>
+                <Latex >What is $((3x^2) \times 4) \div (5-3cx)$</Latex>
+            </p>
                     <li><Link to="/assignments">Assignments</Link></li>
                     <li><Link to="/skills">Skills</Link></li>
                     <li><Link to="/startPractice">Start Practice</Link></li>

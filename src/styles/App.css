@@ -21,17 +21,33 @@
   outline-color:black
 }
 
+.noBullet li{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.noBullet ul{
+  margin:0;
+  padding:10px;
+}
+
 .listContent p {
   color: #DDDDDD;
   text-align:center
 }
 
+.listContent a{
+  text-align:center
+}
 .listContent a:link{
   color: rgb(54, 48, 171);
+  text-align:center
 }
 
 .listContent a:visited{
   color:rgb(54, 48, 171);
+  text-align:center
+
 }
 
 .App-header {

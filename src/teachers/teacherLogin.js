@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link,Navigate} from "react-router-dom"
-import {getCookie} from '../variousUtils.js'
+import {getCookie, TextInput} from '../variousUtils.js'
 
 function TeacherLogin({setIsTeacher}){
     const [username,setUsername] = useState("")
@@ -61,16 +61,8 @@ function TeacherLogin({setIsTeacher}){
                 <h1>Teacher log in:</h1>
                 <li><Link to="/teacher-register">Teacher Register</Link></li>
                 <form onSubmit={submitLoginDetails}>
-                    <input type="text"
-                        value={username}
-                        onChange= {(e) => (setUsername(e.target.value))}
-                        placeholder = "Username"
-                    />
-                    <input type="password"
-                        value={password}
-                        onChange = {(e) => (setPassword(e.target.value))}
-                        placeholder = "Password  "
-                    />
+                    <TextInput inputValue={username} setter={setUsername} placeholder="Username"/>
+                    <TextInput inputValue={password} setter={setPassword} placeholder="Password" type="password"/>
                     <button type="submit">Log in</button>
                 </form>
                 {msgs[response]}

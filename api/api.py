@@ -7,6 +7,11 @@ app = Flask(__name__)
 db_file = "db.db"
 from db import get_db, close_db
 
+def query_as_json(query):
+    conn = get_db()
+    data = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(query).fetchall()])
+    return data
+
 @app.route('/time')
 def get_current_time():
     return {'time': str(date.today())}
@@ -100,9 +105,8 @@ def teacher_login():
 @app.route('/assignments',methods=(['GET']))
 def get_assignments():
     this_id = request.args.get('user',type = str)
-    print(this_id)
     conn = get_db()
-    assignments = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT AssignmentID,NoOfQuestions FROM tblAssignment, tblStudent WHERE tblStudent.StudentID =  "{this_id}" AND tblAssignment.ClassID = tblStudent.ClassID;""").fetchall()])
+    assignments = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT AssignmentID, DateSet, DateDue FROM tblAssignment, tblStudent WHERE tblStudent.StudentID =  "{this_id}" AND tblAssignment.ClassID = tblStudent.ClassID;""").fetchall()])
     return{"status":200,
            "assignments":assignments}
 
@@ -119,17 +123,17 @@ def get_skills():
 @app.route('/select-class',methods=(['GET']))
 def get_classes():
     this_id = request.args.get('user',type = str)
-    conn = get_db()
-    classes = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT ClassID, ClassName from tblClass WHERE TeacherID = "{this_id}" """) ])
+    print(this_id)
+    classes = query_as_json(f"""SELECT ClassID, ClassName FROM tblClass WHERE TeacherID = "{this_id}" """)
     return{"status":200,
-           "classes":classes }
+           "classes":classes}
 
 @app.route('/manage-class',methods=(['GET','PUT']))
 def get_students():
     if request.method == 'GET':
         this_id = request.args.get('class', type = str)
         conn = get_db()
-        students = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)])
+        students = query_as_json(f"""SELECT StudentID, Forename, Surname from tblStudent WHERE ClassID = "{this_id}"  """)
         return{"status":200,
             "students":students}
     elif request.method == 'PUT':
@@ -178,19 +182,55 @@ def create_assignment():
 
         conn.execute(f"""INSERT INTO tblAssignment
                             VALUES("{this_assignmentID}", "{this_classID}", "{this_questionSetID}", "{this_dateSet}", "{this_dateDue}")""")
+        conn.commit()
         return{"status":200}
     except conn.IntegrityError():
         return {"status":409,
                 "errorType": "integrity"}
 
-                
+
 
 @app.route('/get-assignments',methods=(['GET']))
 def get_assignments_for_class():
     this_id = request.args.get('class', type = str)
     conn = get_db()
-    assignments = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT AssignmentID, NoOfQuestions from tblAssignment WHERE ClassID = "{this_id}" """)])
+    assignments = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT AssignmentID, DateSet, DateDue from tblAssignment WHERE ClassID = "{this_id}" """)])
     return{"status":200,
            "assignments":assignments}
+
+
+@app.route('/create-questionSet', methods=(['POST']))
+def create_questionSet():
+    request_data = json.loads(request.data)
+    this_questionSetID = request_data["questionSetID"]
+    this_teacherID = request_data["teacherID"]
+    this_numberOfQuestions = int(request_data["numberOfQuestions"])
+    this_setName = request_data["questionSetDescription"]
+    conn = get_db()
+    try:
+        conn.execute(f"""INSERT INTO tblQuestionSet VALUES("{this_questionSetID}", "{this_teacherID}", {this_numberOfQuestions}, "{this_setName}"); """)
+        blank_questions = [(this_questionSetID,i+1,"Empty question") for i in range(this_numberOfQuestions)] 
+        questions_to_insert = ",\n".join([str(x) for x in blank_questions])
+        conn.execute(f"""INSERT INTO tblQuestion VALUES {questions_to_insert};""")
+        conn.commit()
+        return {"status":200}
+    except conn.IntegrityError:
+        return {"status":409}
+
+
+@app.route('/select-questionSet', methods=(['GET'])) 
+def get_questionSet():
+    this_id = request.args.get('teacherID', type = str)
+    questionSets = query_as_json(f"""SELECT QuestionSetID, NoOfQuestions, SetName FROM tblQuestionSet WHERE TeacherID = "{this_id}" """ )
+    return{"status":200,
+           "questionSets":questionSets}
+
+@app.route('/manage-questionSet',methods=(['GET']))
+def get_questions_to_manage():
+    this_id = request.args.get('questionSetID', type = str)
+    questions = query_as_json(f"""SELECT QuestionNumber, QuestionText FROM tblQuestion WHERE QuestionSetID ="{this_id}" """)
+    return{"status":200,
+           "questions":questions}
 #REFACTOR WEBSITE => TWO NAVS FOR STUDENT / TEACHER??
 #
+

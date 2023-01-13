@@ -12,6 +12,8 @@ import CreateClass from './teachers/classes/createClass.js'
 import SelectClass from './teachers/classes/selectClass.js'
 import ManageClass from './teachers/classes/manageClass.js'
 import AssignmentsNav from './teachers/assignments/assignmentsNav.js'
+import QuestionSetNav from './teachers/assignments/questions/questionsNav.js'
+import CreateQuestionSet from './teachers/assignments/questions/createQuestionSet.js'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
 
@@ -23,6 +25,8 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
+import SelectQuestionSet from './teachers/assignments/questions/selectQuestionSet.js'
+import ManageQuestionSet from './teachers/assignments/questions/manageQuestionSet.js'
 
 
 
@@ -38,7 +42,7 @@ function App() {
         </ul>
       </nav>
     :
-      <nav>
+      <nav className="noBullet">
         <ul>
           <li><Link to="/registration">Registration</Link></li>
           <li><Link to="/">Homepage</Link></li>
@@ -84,6 +88,14 @@ function App() {
             Routes for assignment functionality
           */}
           <Route path="/assignments-nav" element={<TeacherTab component={<AssignmentsNav/>}/>}/>
+
+          {/*
+            Routes for question sets functionality
+          */}
+          <Route path="/questionSets-nav" element={<TeacherTab component={<QuestionSetNav/>}/>}/>
+          <Route path="/create-questionSet" element={<TeacherTab component={<CreateQuestionSet/>}/>}/>
+          <Route path="/select-questionSet" element={<TeacherTab component={<SelectQuestionSet/>}/>}/>  
+          <Route path="/manage-questionSet" element={<TeacherTab component={<ManageQuestionSet/>}/>}/>
         </Routes>
       </div>
     </Router>

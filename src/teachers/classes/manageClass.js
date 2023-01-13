@@ -1,8 +1,7 @@
-import { getCookie } from "../../variousUtils";
+import { getCookie, getResource, TextInput, ListOfObjects } from "../../variousUtils";
 import { Link } from "react-router-dom";
 import {useState} from "react"
 import React from "react";
-
 
 
 //LIST OF STUDENTS => MANAGE EACH STUDENT
@@ -12,51 +11,24 @@ import React from "react";
 async function getStudents(setStudents){
     let  URLParams = new URLSearchParams(window.location.search)
     let classID = URLParams.get('class')
-    let res = await fetch(`/manage-class?class=${classID}`)
-    let resJson = await res.json()
-    let listOfStudents = resJson.students.map((x) => JSON.parse(x))
-    setStudents(listOfStudents)
-
-}
-
-function StudentOverview(props){
-    let studentID = props.studentID
-    let studentName = `${props.Forename} ${props.Surname}`
-    let studentLink = `/manage-student?class=${studentID}`
-    return(
-        <div className="listContent">
-        <p>{studentName}</p>
-        <a><Link to={studentLink}>Manage student</Link></a>
-        </div>
-    )
-    }
-function StudentList(props){
-    let students = props.students
-    return(
-        <div>
-            {students.map((x) => StudentOverview(x))}
-        </div>
-    )
+    getResource(`manage-class?class=${classID}`,"students",setStudents)
 }
 
 async function getAssignments(setAssignments){
     let URLParams = new URLSearchParams(window.location.search)
     let classID = URLParams.get('class')
-
-    let res = await fetch(`/get-assignments?class=${classID}`)
-    let resJson = await res.json()
-    let listOfAssignments= resJson.assignments.map((x) => JSON.parse(x))
-
-    setAssignments(listOfAssignments)
+    getResource(`get-assignments?class=${classID}`,"assignments",setAssignments)
 }
 
 function AssignmentOverview(props){
     let assignmentID = props.AssignmentID
-    let noOfQuestions = props.NoOfQuestions
+    let dateSet = props.DateSet
+    let dateDue = props.DateDue
     return(
         <div className="listContent">
             <p> {assignmentID}</p>
-            <p> Number of questions: {noOfQuestions}</p>
+            <p> Date Set: {dateSet}</p>
+            <p> Date Due: {dateDue}</p>
         </div>
     )
 }
@@ -94,21 +66,31 @@ function ManageClass(){
     const [students,setStudents] = useState([])
     const [assignments,setAssignments] = useState([])
     const [IDtoAdd,setIDtoAdd] = useState("")
+    const studentPrompts={
+        Forename:"Forename",
+        Surname:"Surname"
+    }
+    const baseStudentURL = "manage-student?student="
+    const assignmentPrompts={
+        DateSet:"Date set",
+        DateDue:"Date due"
+    }
+
     //Add lastEnrolled,setLastEnrolled to give message to user after student has been enrolled.
     return(
         <header className="App-header">
             <button type="submit" onClick={() => getStudents(setStudents)}>Get students</button>
-            <StudentList students={students}></StudentList>
+            <ListOfObjects resourceList={students}
+                           prompts={studentPrompts}
+                           baseManageURL={baseStudentURL}
+                           identifier="StudentID"/>
             <button type="submit" onClick={() => getAssignments(setAssignments)}>Get assignments</button>
-            <AssignmentList assignments ={assignments}></AssignmentList>
+            <ListOfObjects resourceList={assignments}
+                           prompts={assignmentPrompts}/>
             <p>Enrol a student:</p>
             <form>
-                <input
-                    type="text"
-                    value = {IDtoAdd}
-                    onChange={(e) => setIDtoAdd(e.target.value)}
-                    placeholder="ID of student to enroll"/>
-                <button type="submit" onClick={(e) => enrollStudent(e,IDtoAdd)}>Enrol student</button>
+                 <TextInput inputValue={IDtoAdd} setter = {setIDtoAdd} placeholder={"ID of student to enrol"}/>
+                 <button type="submit" onClick={(e) => enrollStudent(e,IDtoAdd)}>Enrol student</button>
             </form>
         </header>
     )

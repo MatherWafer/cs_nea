@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link, Navigate} from "react-router-dom"
-import {getCookie} from '../variousUtils.js'
+import {getCookie, TextInput} from '../variousUtils.js'
 
 function Login(){
     const [username,setUsername] = useState("")
@@ -52,39 +52,25 @@ function Login(){
         }
         }
     
-    
     return getCookie('userName') === "notSet" ?
-        <div className='App'>
-            <header className="App-header">
-                <h1>Log in</h1>
-                <form onSubmit={submitLoginDetails}>
-                    <input type="text"
-                        value={username}
-                        onChange= {(e) => (setUsername(e.target.value))}
-                        placeholder = "Username"
-                    />
-                    <input type="password"
-                        value={password}
-                        onChange = {(e) => (setPassword(e.target.value))}
-                        placeholder = "Password  "
-                    />
-                    <button type="submit">Log in</button>
-                </form>
-                {msgs[response]}
-
-                <li><Link to="/teacher-login">Teacher login</Link></li>
-            </header>
-        </div>
-
-
-        :
-        <header className='App-header'>
-            <h1>Logged in!</h1>
-            <li><Navigate to="/">Homepage</Navigate></li>
+    <div className='App'>
+        <header className="App-header">
+            <h1>Log in</h1>
+            <form onSubmit={submitLoginDetails}>
+                <TextInput inputValue={username} setter={setUsername} placeholder={"Username"}/>
+                <TextInput inputValue={password} setter={setPassword} placeholder="Password" type="password"/>
+                <button type="submit">Log in</button>
+            </form>
+            {msgs[response]}
+            <li><Link to="/teacher-login">Teacher login</Link></li>
         </header>
-    
+    </div>
+    :
+    <header className='App-header'>
+        <h1>Logged in!</h1>
+        <li><Navigate to="/">Homepage</Navigate></li>
+    </header>
 
-    
 }
 
 export default Login;

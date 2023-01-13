@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {getCookie} from '../variousUtils.js'
+import {getCookie, Navigation} from '../variousUtils.js'
 import {
     BrowserRouter as Router,
     Routes,
@@ -21,6 +21,9 @@ function Homepage (){
         )
     }
     else{
+        let navData = [{url:"/assignments", prompt:"Assignments"},
+                       {url:"/skills", prompt:"Skills"},
+                       {url:"/startPractice", prompt:"Start practice"}]
         console.log("Getting name cookies")
         let forename = getCookie("forename");
         console.log("Got forename")
@@ -29,13 +32,7 @@ function Homepage (){
         return( <div className='App'>
                 <header className='App-header'>
                     <h1>Hi {forename} {surname}</h1>
-                    <p>YIPPEE!</p> 
-                        <p>
-                <Latex >What is $((3x^2) \times 4) \div (5-3cx)$</Latex>
-            </p>
-                    <li><Link to="/assignments">Assignments</Link></li>
-                    <li><Link to="/skills">Skills</Link></li>
-                    <li><Link to="/startPractice">Start Practice</Link></li>
+                    <Navigation navData={navData}/>
                 </header>
                 </div>
         )

@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {BrowserRouter} from "react-router-dom";
+import { TextInput } from '../variousUtils';
 
 
 
@@ -78,31 +79,9 @@ function RegistrationForm() {
       <>
       <h1> Register an account:</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={studentID}
-          placeholder="Username"
-          onChange={(e) => setStudentID(e.target.value)}
-        />
-        <input
-          type="text"
-          value={forename}
-          placeholder="Forename"
-          onChange={(e) => setForename(e.target.value)}
-        />
-
-        <input
-          type="text"
-          value={surname}
-          placeholder="Surname"
-          onChange={(e) => setSurname(e.target.value)}
-        />
-        <input
-          type="password"
-          value={pwd}
-          placeholder = "Password"
-          onChange = {(e) => setPwd(e.target.value)}
-        />
+        <TextInput inputValue={studentID} setter={setStudentID} placeholder="Username"/>
+        <TextInput inputValue={forename} setter={setForename} placeholder="Forename"/>
+        <TextInput inputValue={pwd} setter={setPwd} placeholder="Password"/>
         <button type="submit">Register</button>
           </form>
         

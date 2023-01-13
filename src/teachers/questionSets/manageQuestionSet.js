@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { getCookie, getResource, TextInput, ListOfObjects } from '../../../variousUtils';
-
+import { getCookie, getResource, TextInput, ListOfObjects } from "../../variousUtils";
 function getQuestionList(setQuestionList){
     let URLParams = new URLSearchParams(window.location.search)
     let questionSetID = URLParams.get('questionSetID')
@@ -17,7 +16,6 @@ function ManageQuestionSet(){
     return(
         <header className="App-header">
             <button type="submit" onClick={() => getQuestionList(setQuestionList)}>HELP</button>
-            <button type="submit" onClick={console.log(questionList)}>HELPELFPELFPE</button>
             <ListOfObjects resourceList={questionList} prompts={questionPrompts}/>
         </header>
     )

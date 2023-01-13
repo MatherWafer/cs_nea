@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getCookie, getResource, TextInput, ListOfObjects } from '../../../variousUtils';
+import { getCookie, getResource, TextInput, ListOfObjects } from "../../variousUtils";
 
 
 function getListOfSets(setListOfSets){

@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getCookie, TextInput } from '../../../variousUtils';
+import {getCookie, TextInput} from "../../variousUtils";
 import {
     Link
   } from "react-router-dom";

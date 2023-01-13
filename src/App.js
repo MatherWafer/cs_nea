@@ -12,8 +12,8 @@ import CreateClass from './teachers/classes/createClass.js'
 import SelectClass from './teachers/classes/selectClass.js'
 import ManageClass from './teachers/classes/manageClass.js'
 import AssignmentsNav from './teachers/assignments/assignmentsNav.js'
-import QuestionSetNav from './teachers/assignments/questions/questionsNav.js'
-import CreateQuestionSet from './teachers/assignments/questions/createQuestionSet.js'
+import QuestionSetNav from './teachers/questionSets/questionsNav.js'
+import CreateQuestionSet from './teachers/questionSets/createQuestionSet.js'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
 
@@ -25,8 +25,8 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
-import SelectQuestionSet from './teachers/assignments/questions/selectQuestionSet.js'
-import ManageQuestionSet from './teachers/assignments/questions/manageQuestionSet.js'
+import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.js'
+import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.js'
 
 
 

@@ -1,4 +1,4 @@
-import { getCookie, getResource, TextInput, ListOfObjects } from "../../variousUtils";
+import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
 import { Link } from "react-router-dom";
 import {useState} from "react"
 import React from "react";
@@ -89,7 +89,7 @@ function ManageClass(){
                            prompts={assignmentPrompts}/>
             <p>Enrol a student:</p>
             <form>
-                 <TextInput inputValue={IDtoAdd} setter = {setIDtoAdd} placeholder={"ID of student to enrol"}/>
+                 <InputField inputValue={IDtoAdd} setter = {setIDtoAdd} placeholder={"ID of student to enrol"}/>
                  <button type="submit" onClick={(e) => enrollStudent(e,IDtoAdd)}>Enrol student</button>
             </form>
         </header>

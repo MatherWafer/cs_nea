@@ -169,7 +169,7 @@ def enrol_student():
     return {"status":200}
 
 
-@app.route('/create-assignment',methods=(['GET']))
+@app.route('/create-assignment',methods=(['POST']))
 def create_assignment():
     request_data = json.loads(request.data)
     this_assignmentID = request_data["assignmentID"]
@@ -181,10 +181,10 @@ def create_assignment():
     try:
 
         conn.execute(f"""INSERT INTO tblAssignment
-                            VALUES("{this_assignmentID}", "{this_classID}", "{this_questionSetID}", "{this_dateSet}", "{this_dateDue}")""")
+                            VALUES("{this_assignmentID}", "{this_classID}", "{this_questionSetID}", "{this_dateSet}", "{this_dateDue}");""")
         conn.commit()
         return{"status":200}
-    except conn.IntegrityError():
+    except conn.IntegrityError:
         return {"status":409,
                 "errorType": "integrity"}
 

@@ -1,4 +1,4 @@
-import { getCookie, TextInput } from "../../variousUtils";
+import { getCookie, InputField } from "../../variousUtils";
 import { Link } from "react-router-dom";
 import {useState} from "react"
 import React from "react";
@@ -55,8 +55,8 @@ function CreateClass() {
     return<header className="App-header">
         <h1>Create a Class</h1>        
         <form onSubmit={submitClassDetails}>
-            <TextInput inputValue={classID} setter={setClassID} placeholder="Class ID"/>
-            <TextInput inputValue={className} setter={setClassName} placeholder="Display Name"/>
+            <InputField inputValue={classID} setter={setClassID} placeholder="Class ID"/>
+            <InputField inputValue={className} setter={setClassName} placeholder="Display Name"/>
             <button type="submit">Submit</button>
         </form>        
         {msgs[lastStatus]}

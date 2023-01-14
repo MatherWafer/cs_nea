@@ -6,7 +6,6 @@ import {
   
 function AssignmentsNav(){
   let navData = [{url: "/questionSets-nav", prompt: "Question Sets"},
-                 {url: "/select-assignment", prompt: "View existing assignments"},
                  {url: "/create-assignment", prompt: "Create an assignment"}]
   return (
     <div className='App'>

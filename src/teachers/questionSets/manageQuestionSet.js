@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getCookie, getResource, TextInput, ListOfObjects } from "../../variousUtils";
+import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
 function getQuestionList(setQuestionList){
     let URLParams = new URLSearchParams(window.location.search)
     let questionSetID = URLParams.get('questionSetID')

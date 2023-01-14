@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {getCookie, TextInput} from "../../variousUtils";
+import {getCookie, InputField} from "../../variousUtils";
 import {
     Link
   } from "react-router-dom";
@@ -18,8 +18,6 @@ async function createQuestionSet(event,questionSetID,numberOfQuestions,questionS
             questionSetDescription: questionSetDescription
         })
     })
-
-    console.log("WHAT")
 }
 
 
@@ -31,9 +29,9 @@ function CreateQuestionSet(){
     return(
         <header className='App-header'>
             <form onSubmit = {(e) => createQuestionSet(e,questionSetID,numberOfQuestions,questionSetDescription)}>
-                <TextInput inputValue={questionSetID} setter={setQuestionSetID} placeholder="Question set ID"/>
-                <TextInput inputValue={numberOfQuestions} type="number" setter={setNumberOfQuestions} placeholder="Number of questions(Default is 5)"/>
-                <TextInput inputValue={questionSetDescription} setter={setQuestionSetDescription} placeholder={"Name / description of question set"}/>
+                <InputField inputValue={questionSetID} setter={setQuestionSetID} placeholder="Question set ID"/>
+                <InputField inputValue={numberOfQuestions} type="number" setter={setNumberOfQuestions} placeholder="Number of questions(Default is 5)"/>
+                <InputField inputValue={questionSetDescription} setter={setQuestionSetDescription} placeholder={"Name / description of question set"}/>
             <button type="submit">Create</button>
             </form>
         </header>

@@ -1,13 +1,11 @@
 import React, { useState, useEffect} from 'react';
-import {getCookie} from '../variousUtils.js'
+import {getCookie, Navigation} from '../variousUtils.js'
 import {
     BrowserRouter as Router,
     Link
   } from "react-router-dom";
   
 function TeacherHomepage (){
-    console.log(getCookie("userName"))
-    console.log(document.cookie)
     if (getCookie("userName") === "notSet"){
         return(
             <header className='App-header'>
@@ -19,17 +17,17 @@ function TeacherHomepage (){
         )
     }
     else{
-        console.log("Getting name cookies")
         let forename = getCookie("forename");
-        console.log("Got forename")
         let surname = getCookie("surname");
         console.log("Got Surname")
+        const navData = [{url:"/assignments-nav",prompt:"Assignments"},
+                         {url:"/classes-nav",prompt:"Classes"},
+                         {url: "/questionSets-nav", prompt: "Question Sets"}]
         return( <div className='App'>
                 <header className='App-header'>
                     <h1>Hi {forename} {surname}</h1>
                     <p>YIPPEE!</p> 
-                    <a><Link to="/assignments-nav">Assignments</Link></a>
-                    <a><Link to="/classes-nav">Classes</Link></a>
+                    <Navigation navData={navData}/>
                 </header>
                 </div>
         )

@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link, Navigate} from "react-router-dom"
-import {getCookie, TextInput} from '../variousUtils.js'
+import {getCookie, InputField} from '../variousUtils.js'
 
 function Login(){
     const [username,setUsername] = useState("")
@@ -57,8 +57,8 @@ function Login(){
         <header className="App-header">
             <h1>Log in</h1>
             <form onSubmit={submitLoginDetails}>
-                <TextInput inputValue={username} setter={setUsername} placeholder={"Username"}/>
-                <TextInput inputValue={password} setter={setPassword} placeholder="Password" type="password"/>
+                <InputField inputValue={username} setter={setUsername} placeholder={"Username"}/>
+                <InputField inputValue={password} setter={setPassword} placeholder="Password" type="password"/>
                 <button type="submit">Log in</button>
             </form>
             {msgs[response]}

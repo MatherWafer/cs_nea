@@ -37,20 +37,33 @@ function Navigation(props){
         </>
 }
 
-function TextInput(props){
+function InputField(props){
     let inputValue = props.inputValue
     let setter = props.setter
     let placeholder= props.placeholder
     let type = props.type
+    let minValue = props.minValue
     if (!type){
         type = "text"
     }
+    if (type === "select"){
+        let options = props.options
+        let identifier = props.identifier
+        let displayName = props.displayName
+        return(
+            <select value={inputValue} onChange={(e) => setter(e.target.value)}>
+                {options.map((x) => <option value={x[identifier]}> {x[displayName]}</option>)}
+            </select>
+        )
+    }
+    else{
     return(
         <input type={type}
         value={inputValue}
+        min={minValue}
         placeholder={placeholder}
         onChange={(e) => setter(e.target.value)}/>
-    )
+    )}
 }
 
 //PARAMETERISE GETTING LISTS OF OBJECTS???
@@ -91,7 +104,6 @@ function ObjectOverview(props){
     let listOfKeys = Object.getOwnPropertyNames(thisObject)
     let prompts = props.prompts
     let manageURL = props.manageURL
-    console.log(listOfKeys)
     return(
         <div className="listContent">
             {listOfKeys.map((x) => prompts[x]? (<p> {prompts[x]}: {thisObject[x]} </p>)
@@ -124,4 +136,4 @@ function ListOfObjects(props){
 
 
 
-export {getCookie,TeacherTab,StudentTab,Navigation,TextInput,getResource,ObjectOverview, ListOfObjects };
+export {getCookie,TeacherTab,StudentTab,Navigation,InputField,getResource,ObjectOverview, ListOfObjects };

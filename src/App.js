@@ -14,6 +14,9 @@ import ManageClass from './teachers/classes/manageClass.js'
 import AssignmentsNav from './teachers/assignments/assignmentsNav.js'
 import QuestionSetNav from './teachers/questionSets/questionsNav.js'
 import CreateQuestionSet from './teachers/questionSets/createQuestionSet.js'
+import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.js'
+import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.js'
+import CreateAssignment from './teachers/assignments/createAssignment.js'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
 
@@ -25,9 +28,6 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
-import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.js'
-import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.js'
-
 
 
 
@@ -88,6 +88,7 @@ function App() {
             Routes for assignment functionality
           */}
           <Route path="/assignments-nav" element={<TeacherTab component={<AssignmentsNav/>}/>}/>
+          <Route path="/create-assignment" element={<TeacherTab component={<CreateAssignment/>}/>}/>
 
           {/*
             Routes for question sets functionality

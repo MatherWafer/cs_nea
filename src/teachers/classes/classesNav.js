@@ -2,7 +2,7 @@ import { getCookie, Navigation } from "../../variousUtils";
 import {Link} from "react-router-dom"
 function ClassesNav(){
     let navData = [{url:"/select-class", prompt: "Manage a class"},
-                   {url:"/create-class", prompt: "Create a class"}]
+                   {url:"/create-class", prompt: "Create a class"}]                
     return (
         <div className='App'>
                 <header className='App-header'>

@@ -66,16 +66,18 @@ function ManageClass(){
     const [students,setStudents] = useState([])
     const [assignments,setAssignments] = useState([])
     const [IDtoAdd,setIDtoAdd] = useState("")
+    let URLParams = new URLSearchParams(window.location.search)
+    let classID = URLParams.get('class')
     const studentPrompts={
         Forename:"Forename",
         Surname:"Surname"
     }
-    const baseStudentURL = "manage-student?student="
+    const baseStudentURL = "/manage-student?student="
     const assignmentPrompts={
         DateSet:"Date set",
         DateDue:"Date due"
     }
-
+    const baseAssignmentURL =`/view-submissions?classID=${classID}&assignment=`
     //Add lastEnrolled,setLastEnrolled to give message to user after student has been enrolled.
     return(
         <header className="App-header">
@@ -86,7 +88,9 @@ function ManageClass(){
                            identifier="StudentID"/>
             <button type="submit" onClick={() => getAssignments(setAssignments)}>Get assignments</button>
             <ListOfObjects resourceList={assignments}
-                           prompts={assignmentPrompts}/>
+                           prompts={assignmentPrompts}
+                           baseManageURL={baseAssignmentURL}
+                           identifier="AssignmentID"/>
             <p>Enrol a student:</p>
             <form>
                  <InputField inputValue={IDtoAdd} setter = {setIDtoAdd} placeholder={"ID of student to enrol"}/>

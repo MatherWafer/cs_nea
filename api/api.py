@@ -231,6 +231,16 @@ def get_questions_to_manage():
     questions = query_as_json(f"""SELECT QuestionNumber, QuestionText FROM tblQuestion WHERE QuestionSetID ="{this_id}" """)
     return{"status":200,
            "questions":questions}
+@app.route('/view-submissions', methods=(['GET']))
+def view_submissions_for_assignment():
+    this_assignmentID = request.args.get('assignment', type = str)
+    submissions = query_as_json(f"""SELECT Forename, Surname, tblStudent.StudentID, UserAnswers, DateSubmitted 
+                                    FROM tblUserSubmission 
+                                    INNER JOIN tblStudent 
+                                    ON tblStudent.StudentID = tblUserSubmission.StudentID
+                                    WHERE AssignmentID = "{this_assignmentID}"; """)
+    return{"status":200,
+           "submissions":submissions}                                        
 #REFACTOR WEBSITE => TWO NAVS FOR STUDENT / TEACHER??
 #
 

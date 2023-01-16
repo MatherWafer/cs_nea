@@ -28,6 +28,7 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
+import ViewSubmissions from './teachers/classes/viewSubmissions.js'
 
 
 
@@ -89,7 +90,7 @@ function App() {
           */}
           <Route path="/assignments-nav" element={<TeacherTab component={<AssignmentsNav/>}/>}/>
           <Route path="/create-assignment" element={<TeacherTab component={<CreateAssignment/>}/>}/>
-
+          <Route path="/view-submissions" element={<TeacherTab component={<ViewSubmissions/>}/>}/>
           {/*
             Routes for question sets functionality
           */}

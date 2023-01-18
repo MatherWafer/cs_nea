@@ -29,7 +29,9 @@ import {
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
 import ViewSubmissions from './teachers/classes/viewSubmissions.js'
-
+import EditQuestion from './teachers/questionSets/editQuestion.js'
+import DoAssignment from './students/doAssignment.js'
+import SubmitAssignment from './students/submitAssignment.js'
 
 
 
@@ -66,6 +68,8 @@ function App() {
           <Route path='/login' element={<Login/>}/>
           <Route path='/view-stats' element={<StudentTab component={<ViewStats/>}/>}/>
           <Route path='/assignments' element={<StudentTab component={<ViewAssignments/>}/>}/>
+          <Route path='/do-assignment' element={<StudentTab component={<DoAssignment/>}/>}/>
+          <Route path='/submit-assignment' element={<StudentTab component={<SubmitAssignment/>}/>}/>
           <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
           <Route path='/startPractice' element={<StudentTab component={<StartPractice/>}/>}/>
 
@@ -98,6 +102,7 @@ function App() {
           <Route path="/create-questionSet" element={<TeacherTab component={<CreateQuestionSet/>}/>}/>
           <Route path="/select-questionSet" element={<TeacherTab component={<SelectQuestionSet/>}/>}/>  
           <Route path="/manage-questionSet" element={<TeacherTab component={<ManageQuestionSet/>}/>}/>
+          <Route path="/edit-question" element={<TeacherTab component={<EditQuestion/>}/>}/>
         </Routes>
       </div>
     </Router>

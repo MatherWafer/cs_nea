@@ -19,11 +19,20 @@ table, th, td {
   color:rgba(255, 255, 255, 0.863)
   }
 .listContent{
-  background-color:#5e2a2a;
+  background-color:#14207825;
   color: rgba(255, 255, 255, 0.42);
   padding: 20px;
   outline: solid;
-  outline-color:black
+  outline-color:rgba(0, 0, 0, 0.278);
+  transition: background-color 250ms ease-out 50ms
+}
+
+.listContent:hover{
+  background-color:#1420788b;
+}
+
+@keyframes listContentHovered{
+
 }
 
 .noBullet li{
@@ -56,7 +65,7 @@ table, th, td {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #1f1d1dd8;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

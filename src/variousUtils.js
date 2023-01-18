@@ -95,8 +95,15 @@ function InputField(props){
 async function getResource(resourceURL,resourceName,setter){
     let res = await fetch(resourceURL)
     let resJson = await res.json()
-    let resourceList = resJson[resourceName].map((x) => JSON.parse(x))
-    setter(resourceList)
+    if(typeof resJson[resourceName] === "object"){
+        let resourceList = resJson[resourceName].map((x) => JSON.parse(x))
+        setter(resourceList)
+    }
+    else{
+        let resource = resJson[resourceName]
+        setter(resource)
+    }
+    
 }
 
 function ObjectOverview(props){
@@ -105,10 +112,14 @@ function ObjectOverview(props){
     let prompts = props.prompts
     let manageURL = props.manageURL
     return(
-        <div className="listContent">
-            {listOfKeys.map((x) => prompts[x]? (<p> {prompts[x]}: {thisObject[x]} </p>)
+        <div style={{    width: "calc(33% - 2em)"}}className="listContent">
+            {listOfKeys.map((x) => prompts[x]? (<p> {prompts[x]} {thisObject[x]} </p>)
                                              : null)}
-            {manageURL? <a><Link to={manageURL}>Manage</Link></a>:null}
+            {manageURL? <a style={{
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  textAlign:"center",}}><Link to={manageURL}>Manage</Link></a>:null}
         </div>
     )
 }
@@ -124,7 +135,7 @@ function ListOfObjects(props){
             {students.map((x) => StudentOverview(x))}
         </div>
         */
-       <div>
+       <div style={{margin:"auto", display:'flex',flexDirection:'row',gap:"30px",flexWrap:"wrap",width:"50%"}}>
             {resourceList.map((x) => <ObjectOverview 
                 thisObject={x} 
                 prompts={prompts}

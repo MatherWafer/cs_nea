@@ -18,15 +18,15 @@ async function getStudents(setStudentlist){
 function SubmissionsAsList(props){
     let submissionList = props.submissionList
     return(
-        <table>
+        <table style={{padding:"10px"}}>
             <tr>
                 <td>Name</td>
                 <td>Submitted on:</td>
             </tr>
             {submissionList.map((x) =>
-                <tr>
+                <tr style={{}}>
                     <td>{x.Forename} {x.Surname}</td>
-                    <td>{x.DateSubmitted? x.DateSubmitted: "Not submitted"}</td>
+                    <td>{(x.DateSubmitted != "1970-01-01")? x.DateSubmitted: "Not submitted"}</td>
                 </tr>)}
         </table>
     )

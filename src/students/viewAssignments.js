@@ -1,22 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { json } from "react-router-dom";
-import {getCookie} from '../variousUtils.js'
+import {getCookie, getResource, ListOfObjects} from '../variousUtils.js'
 
 
-async function viewAssignment(setAssignmentList,user){
-    let res = await fetch(`/assignments?user=${user}`);
-    let resJson = await res.json()
-    setAssignmentList(resJson.assignments.map(x =>JSON.parse(x)))
+async function getAssignments(setAssignmentList){
+    const user = getCookie("userName")
+    let assignmentsURL = `/assignments?user=${user}`
+    getResource(assignmentsURL,"assignments",setAssignmentList)
+
 }
-
+ 
 
 function ViewAssignments(){
     const user = getCookie("userName")
     const [assignmentList,setAssignmentList] = useState([])
+    let assignmentPrompts={AssignmentID:"ID:",
+                           DateDue:"Due on:"}
+    const baseAssignmentURL = "/do-assignment?assignmentID="
+    useEffect((() => {getAssignments(setAssignmentList)}),[])
     return(
         <header className="App-header">
-            <button onClick={() => viewAssignment(setAssignmentList,user)}>Load Assignments</button>
-            <p>{[assignmentList.map(x => JSON.stringify(x))]}</p>
+            <ListOfObjects resourceList={assignmentList} prompts={assignmentPrompts} baseManageURL= {baseAssignmentURL} identifier="AssignmentID"/>
         </header>
     )
 }

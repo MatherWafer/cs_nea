@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
 
 
@@ -13,11 +13,10 @@ function SelectQuestionSet(){
     const questionSetPrompts={NoOfQuestions:"Number of questions",
                         SetName: "Set name"}
     const baseSetURL = "/manage-questionSet?questionSetID="
+    useEffect((()=>{getListOfSets(setListOfSets)}),[])
     return(
         <header className="App-header">
-            <button type="submit" onClick={() => getListOfSets(setListOfSets)}>Get sets</button>
             <button type="submit" onClick={() => console.log(listOfSets)}>HELP</button>
-
             <ListOfObjects  resourceList={listOfSets} prompts={questionSetPrompts} baseManageURL={baseSetURL} identifier="QuestionSetID"/>
         </header>
     )

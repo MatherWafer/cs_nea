@@ -1,6 +1,6 @@
 import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
 import { Link } from "react-router-dom";
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import React from "react";
 
 
@@ -66,6 +66,8 @@ function ManageClass(){
     const [students,setStudents] = useState([])
     const [assignments,setAssignments] = useState([])
     const [IDtoAdd,setIDtoAdd] = useState("")
+    useEffect((()=>{getStudents(setStudents)}),[])
+    useEffect((()=>{getAssignments(setAssignments)}),[])
     let URLParams = new URLSearchParams(window.location.search)
     let classID = URLParams.get('class')
     const studentPrompts={
@@ -74,6 +76,7 @@ function ManageClass(){
     }
     const baseStudentURL = "/manage-student?student="
     const assignmentPrompts={
+        AssignmentID: "ID",
         DateSet:"Date set",
         DateDue:"Date due"
     }
@@ -81,12 +84,12 @@ function ManageClass(){
     //Add lastEnrolled,setLastEnrolled to give message to user after student has been enrolled.
     return(
         <header className="App-header">
-            <button type="submit" onClick={() => getStudents(setStudents)}>Get students</button>
+            <span style={{height:"5%",width:"100%",textAlign:"center", padding:"20px",margin:"20px",backgroundColor:"#282828"}}>Students</span>
             <ListOfObjects resourceList={students}
                            prompts={studentPrompts}
                            baseManageURL={baseStudentURL}
                            identifier="StudentID"/>
-            <button type="submit" onClick={() => getAssignments(setAssignments)}>Get assignments</button>
+            <span style={{height:"5%",width:"100%",textAlign:"center", padding:"20px",margin:"20px",backgroundColor:"#282828"}}>Assignments</span>
             <ListOfObjects resourceList={assignments}
                            prompts={assignmentPrompts}
                            baseManageURL={baseAssignmentURL}

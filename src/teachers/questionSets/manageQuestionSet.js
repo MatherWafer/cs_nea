@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
 function getQuestionList(setQuestionList){
     let URLParams = new URLSearchParams(window.location.search)
@@ -11,12 +11,18 @@ function ManageQuestionSet(){
     const [questionList,setQuestionList] = useState([])
     const questionPrompts={
      QuestionNumber: "Question",
-     QuestionText: "txt"
+     QuestionText: " "
     }
+    let URLParams = new URLSearchParams(window.location.search)
+    let questionSetID = URLParams.get('questionSetID')
+    const baseQuestionURL = `/edit-question?questionSetID=${questionSetID}&questionNumber=`
+    useEffect((()=>{getQuestionList(setQuestionList)}),[])
     return(
         <header className="App-header">
-            <button type="submit" onClick={() => getQuestionList(setQuestionList)}>HELP</button>
-            <ListOfObjects resourceList={questionList} prompts={questionPrompts}/>
+            <ListOfObjects resourceList={questionList} 
+                           prompts={questionPrompts}
+                           baseManageURL={baseQuestionURL}
+                           identifier="QuestionNumber"/>
         </header>
     )
 }

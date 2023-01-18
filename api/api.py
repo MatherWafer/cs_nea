@@ -1,6 +1,6 @@
 from flask import Flask, request, flash , jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import date
+from datetime import date,datetime
 import json
 import sqlite3
 app = Flask(__name__)
@@ -179,9 +179,11 @@ def create_assignment():
     this_dateDue = request_data["dateDue"]
     conn = get_db()
     try:
-
+        list_of_studentIDs = list(map(lambda x: (this_assignmentID, x["StudentID"]),conn.execute(f"""SELECT StudentID from tblStudent WHERE ClassID = "{this_classID}" ;""")))
+        empty_assignments = ",\n".join([str(x) for x in list_of_studentIDs])
         conn.execute(f"""INSERT INTO tblAssignment
                             VALUES("{this_assignmentID}", "{this_classID}", "{this_questionSetID}", "{this_dateSet}", "{this_dateDue}");""")
+        conn.execute(f"""INSERT INTO tblUserSubmission (AssignmentID,StudentID) VALUES {empty_assignments};""")
         conn.commit()
         return{"status":200}
     except conn.IntegrityError:
@@ -241,6 +243,68 @@ def view_submissions_for_assignment():
                                     WHERE AssignmentID = "{this_assignmentID}"; """)
     return{"status":200,
            "submissions":submissions}                                        
+
+@app.route('/edit-question',methods=(['GET','PUT']))
+def edit_question():
+    this_questionSetID = request.args.get('questionSetID', type = str)
+    this_questionNumber = request.args.get('questionNumber', type = str)
+    if request.method == 'GET':
+        conn = get_db()
+        questionText = conn.execute(f"""SELECT QuestionText FROM tblQuestion WHERE QuestionSetID = "{this_questionSetID}" AND QuestionNumber = {this_questionNumber};""").fetchone()["QuestionText"]
+        return {"status":200,
+                "questionText":questionText}
+    elif request.method =='PUT':
+        conn = get_db()
+        requestData = json.loads(request.data)
+        this_newText = requestData["newText"]
+        conn.execute(f"""UPDATE tblQuestion
+                            SET QuestionText = "{this_newText}"  WHERE QuestionSetID = "{this_questionSetID}" AND QuestionNumber = {this_questionNumber};""")
+        conn.commit()
+        return{"status":200}
+
+@app.route('/do-assignment',methods=(['GET','PUT']))
+def get_submission_and_questions():
+    this_assignmentID = request.args.get('assignmentID', type = str)
+    this_studentID = request.args.get('student', type = str)
+    if request.method == 'GET':
+        conn = get_db()
+        userAnswers = conn.execute(f"""SELECT UserAnswers FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()[0].replace("''",'"')
+        questions = conn.execute(f"""SELECT QuestionNumber,QuestionText 
+                                    FROM tblQuestion
+                                    INNER JOIN tblQuestionSet
+                                    ON tblQuestion.QuestionSetID = tblQuestionSet.QuestionSetID
+                                    INNER JOIN tblAssignment 
+                                        ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID;""").fetchall()
+
+        question_list = list(map(lambda y:y[1],sorted(list(map(lambda x: (x[0],x[1]), questions)), key=lambda x:x[0])))  #MAWHAHAHAHAHHAHAH ONE LINER HELLL
+        return{"status":200, "questions": question_list, "answers":userAnswers}
+    elif request.method == 'PUT':
+        requestData = json.loads(request.data)
+        answers = json.dumps(requestData["answers"]).replace('"',"''")
+        print(answers)
+        conn = get_db()
+        conn.execute(f"""UPDATE tblUserSubmission
+                            SET UserAnswers = "{answers}" WHERE (AssignmentID,StudentID) = ("{this_assignmentID}","{this_studentID}")  ;""")
+        conn.commit()
+        return{"status":200}
+
+@app.route('/submit-assignment', methods=(['PUT']))
+def submit_assignment():
+    this_assignmentID = request.args.get('assignment', type = str)
+    this_studentID = request.args.get('student', type = str)
+    current_date = datetime.now()
+    today = current_date.strftime('%Y-%m-%d')
+    print(today)
+    conn = get_db()
+    conn.execute(f"""UPDATE tblUserSubmission
+                        SET DateSubmitted = "{today}" WHERE (AssignmentID,StudentID) = ("{this_assignmentID}","{this_studentID}")   ;""")
+    conn.commit()
+    return{"status":200}
+
+
+
+
 #REFACTOR WEBSITE => TWO NAVS FOR STUDENT / TEACHER??
 #
 
+	    #SET QuestionText = "dsw" WHERE QuestionSetID = "TestSet2kk" AND QuestionNumber = 3;

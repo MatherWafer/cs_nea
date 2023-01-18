@@ -269,14 +269,14 @@ def get_submission_and_questions():
     if request.method == 'GET':
         conn = get_db()
         userAnswers = conn.execute(f"""SELECT UserAnswers FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()[0].replace("''",'"')
-        questions = conn.execute(f"""SELECT QuestionNumber,QuestionText 
+        questions = conn.execute(f"""SELECT QuestionText 
                                     FROM tblQuestion
                                     INNER JOIN tblQuestionSet
                                     ON tblQuestion.QuestionSetID = tblQuestionSet.QuestionSetID
                                     INNER JOIN tblAssignment 
-                                        ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID;""").fetchall()
-
-        question_list = list(map(lambda y:y[1],sorted(list(map(lambda x: (x[0],x[1]), questions)), key=lambda x:x[0])))  #MAWHAHAHAHAHHAHAH ONE LINER HELLL
+                                        ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID
+                                    ORDER BY QuestionNumber;""").fetchall()
+        question_list = list(map(lambda x: x[0],questions))
         return{"status":200, "questions": question_list, "answers":userAnswers}
     elif request.method == 'PUT':
         requestData = json.loads(request.data)
@@ -300,6 +300,25 @@ def submit_assignment():
                         SET DateSubmitted = "{today}" WHERE (AssignmentID,StudentID) = ("{this_assignmentID}","{this_studentID}")   ;""")
     conn.commit()
     return{"status":200}
+
+
+@app.route('/mark-submission',methods=(['GET','PUT']))
+def mark_submission():
+    this_assignmentID = request.args.get('assignment', type = str)
+    this_studentID = request.args.get('student', type = str)
+
+    if method == 'GET':
+        conn = get_db()
+        userAnswers = conn.execute(f"""SELECT UserAnswers FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()[0].replace("''",'"')
+        questions = conn.execute(f"""SELECT QuestionText 
+                                    FROM tblQuestion
+                                    INNER JOIN tblQuestionSet
+                                    ON tblQuestion.QuestionSetID = tblQuestionSet.QuestionSetID
+                                    INNER JOIN tblAssignment 
+                                        ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID
+                                    ORDER BY QuestionNumber;""").fetchall()
+        question_list = list(map(lambda x: x[0],questions))
+        return{"status":200, "questions": question_list, "answers":userAnswers}
 
 
 

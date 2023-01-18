@@ -28,7 +28,7 @@ import {
   Link
 } from "react-router-dom";
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
-import ViewSubmissions from './teachers/classes/viewSubmissions.js'
+import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.js'
 import EditQuestion from './teachers/questionSets/editQuestion.js'
 import DoAssignment from './students/doAssignment.js'
 import SubmitAssignment from './students/submitAssignment.js'

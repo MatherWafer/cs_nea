@@ -236,7 +236,7 @@ def get_questions_to_manage():
 @app.route('/view-submissions', methods=(['GET']))
 def view_submissions_for_assignment():
     this_assignmentID = request.args.get('assignment', type = str)
-    submissions = query_as_json(f"""SELECT Forename, Surname, tblStudent.StudentID, UserAnswers, DateSubmitted 
+    submissions = query_as_json(f"""SELECT Forename, Surname, tblStudent.StudentID, DateSubmitted 
                                     FROM tblUserSubmission 
                                     INNER JOIN tblStudent 
                                     ON tblStudent.StudentID = tblUserSubmission.StudentID
@@ -306,23 +306,64 @@ def submit_assignment():
 def mark_submission():
     this_assignmentID = request.args.get('assignment', type = str)
     this_studentID = request.args.get('student', type = str)
-
-    if method == 'GET':
+    print(this_assignmentID,this_studentID)
+    if request.method == 'GET':
         conn = get_db()
-        userAnswers = conn.execute(f"""SELECT UserAnswers FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()[0].replace("''",'"')
-        questions = conn.execute(f"""SELECT QuestionText 
+        userAnswersAndMarks = conn.execute(f"""SELECT UserAnswers, MarksForQuestions FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()
+        userAnswers =  userAnswersAndMarks[0].replace("''",'"')
+        userMarks = userAnswersAndMarks[1].replace("'",'"')
+        questions = conn.execute(f"""SELECT QuestionText, Answer, MarksAvailable
                                     FROM tblQuestion
                                     INNER JOIN tblQuestionSet
                                     ON tblQuestion.QuestionSetID = tblQuestionSet.QuestionSetID
                                     INNER JOIN tblAssignment 
                                         ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID
                                     ORDER BY QuestionNumber;""").fetchall()
-        question_list = list(map(lambda x: x[0],questions))
-        return{"status":200, "questions": question_list, "answers":userAnswers}
+        question_list = list(map(lambda x: {"questionText": x[0],
+                                            "questionAnswer": x[1],
+                                            "marksAvailable": x[2]}, questions))
+        return{"status":200, 
+               "questions": question_list, 
+               "answers": userAnswers, 
+               "marks": userMarks}
+    elif request.method == 'PUT':
+        conn = get_db()
+        request_data = json.loads(request.data)
+        marks = json.dumps(request_data["marks"]).replace('"',"''")
+        print(marks)
+        conn.execute(f"""UPDATE tblUserSubmission
+                            SET Returned = 1,
+                                MarksForQuestions = "{marks}"
+                            WHERE  (AssignmentID,StudentID) = ("{this_assignmentID}","{this_studentID}");""")
+        conn.commit()
+        return{"status":200}
 
 
-
-
+#def get_submission_and_questions():
+#    this_assignmentID = request.args.get('assignmentID', type = str)
+#    this_studentID = request.args.get('student', type = str)
+#    if request.method == 'GET':
+#        conn = get_db()
+##        userAnswers = conn.execute(f"""SELECT UserAnswers FROM tblUserSubmission WHERE AssignmentID = "{this_assignmentID}" AND StudentID = "{this_studentID}"; """).fetchone()[0].replace("''",'"')
+ #       questions = conn.execute(f"""SELECT QuestionText 
+#                                    FROM tblQuestion
+#                                    INNER JOIN tblQuestionSet
+##                                    ON tblQuestion.QuestionSetID = tblQuestionSet.QuestionSetID
+#                                    INNER JOIN tblAssignment 
+#                                        ON AssignmentID = "{this_assignmentID}" AND tblAssignment.QuestionSetID = tblQuestionSet.QuestionSetID
+#                                    ORDER BY QuestionNumber;""").fetchall()
+ #       question_list = list(map(lambda x: x[0],questions))
+ #       return{"status":200, "questions": question_list, "answers":userAnswers}
+  #  elif request.method == 'PUT':
+   #     requestData = json.loads(request.data)
+   #     answers = json.dumps(requestData["answers"]).replace('"',"''")
+   #     print(answers)
+   #     conn = get_db()
+   #     conn.execute(f"""UPDATE tblUserSubmission
+   #                         SET UserAnswers = "{answers}" WHERE (AssignmentID,StudentID) = ("{this_assignmentID}","{this_studentID}")  ;""")
+    #    conn.commit()
+    #    return{"status":200}
+#
 #REFACTOR WEBSITE => TWO NAVS FOR STUDENT / TEACHER??
 #
 

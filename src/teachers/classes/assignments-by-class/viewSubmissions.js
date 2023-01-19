@@ -17,6 +17,9 @@ async function getStudents(setStudentlist){
 
 function SubmissionsAsList(props){
     let submissionList = props.submissionList
+    let URLParams = new URLSearchParams(window.location.search)
+    let assignmentID = URLParams.get('assignment')
+    let baseMarkURL = `/mark-submission?assignment=${assignmentID}&student=`
     return(
         <table style={{padding:"10px"}}>
             <tr>
@@ -26,7 +29,12 @@ function SubmissionsAsList(props){
             {submissionList.map((x) =>
                 <tr style={{}}>
                     <td>{x.Forename} {x.Surname}</td>
-                    <td>{(x.DateSubmitted != "1970-01-01")? x.DateSubmitted: "Not submitted"}</td>
+                    {
+                        x.DateSubmitted != "1970-01-01"?
+                            <td><Link to={baseMarkURL + x.StudentID}>{x.DateSubmitted}</Link></td>
+                        :
+                            <td>Not submitted</td>
+                    }   
                 </tr>)}
         </table>
     )

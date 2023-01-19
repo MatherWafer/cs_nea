@@ -43,6 +43,7 @@ function InputField(props){
     let placeholder= props.placeholder
     let type = props.type
     let minValue = props.minValue
+    let maxValue = props.maxValue
     if (!type){
         type = "text"
     }
@@ -61,6 +62,7 @@ function InputField(props){
         <input type={type}
         value={inputValue}
         min={minValue}
+        max={maxValue}
         placeholder={placeholder}
         onChange={(e) => setter(e.target.value)}/>
     )}

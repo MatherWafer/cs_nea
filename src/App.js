@@ -32,6 +32,8 @@ import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmiss
 import EditQuestion from './teachers/questionSets/editQuestion.js'
 import DoAssignment from './students/doAssignment.js'
 import SubmitAssignment from './students/submitAssignment.js'
+import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.js'
+import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.js'
 
 
 
@@ -95,6 +97,8 @@ function App() {
           <Route path="/assignments-nav" element={<TeacherTab component={<AssignmentsNav/>}/>}/>
           <Route path="/create-assignment" element={<TeacherTab component={<CreateAssignment/>}/>}/>
           <Route path="/view-submissions" element={<TeacherTab component={<ViewSubmissions/>}/>}/>
+          <Route path="/mark-submission" element={<TeacherTab component={<MarkSubmission/>}/>}/>
+          <Route path="/return-submission" element={<TeacherTab component={<ReturnSubmission/>}/>}/>
           {/*
             Routes for question sets functionality
           */}

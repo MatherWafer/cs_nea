@@ -94,18 +94,23 @@ function InputField(props){
     }
 */
 
-async function getResource(resourceURL,resourceName,setter){
+async function getResource(resourceURL,resourceName,setter,multipleResources=false){
     let res = await fetch(resourceURL)
     let resJson = await res.json()
-    if(typeof resJson[resourceName] === "object"){
-        let resourceList = resJson[resourceName].map((x) => JSON.parse(x))
-        setter(resourceList)
+    if(!multipleResources){
+        if(typeof resJson[resourceName] === "object"){
+            let resourceList = resJson[resourceName].map((x) => JSON.parse(x))
+            setter(resourceList)
+        }
+        else{
+            let resource = resJson[resourceName]
+            setter(resource)
+        }
     }
     else{
-        let resource = resJson[resourceName]
-        setter(resource)
+        resourceName.forEach((resource) => {
+            setter[resource](resJson[resource])});
     }
-    
 }
 
 function ObjectOverview(props){

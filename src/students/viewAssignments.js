@@ -20,6 +20,7 @@ function ViewAssignments(){
     useEffect((() => {getAssignments(setAssignmentList)}),[])
     return(
         <header className="App-header">
+            <h1>Your assignments:</h1>
             <ListOfObjects resourceList={assignmentList} prompts={assignmentPrompts} baseManageURL= {baseAssignmentURL} identifier="AssignmentID"/>
         </header>
     )

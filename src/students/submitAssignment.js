@@ -28,7 +28,7 @@ function SubmitAssignment(){
     return(
         <header className='App-header'>
             <h1>{status===-1?"Submitting...": "Submitted"}</h1>
-            
+            {status===200? <a><Link to="/assignments">Back to other assignments</Link></a>: null}
         </header>
     )
 }

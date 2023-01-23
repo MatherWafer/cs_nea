@@ -57,7 +57,16 @@ function QuestionView(props){
             <h3>Answer: {questionAnswer}</h3>
             <h3>User answered: {props.userAnswer}</h3>
             <h3>Max marks: {maxMarks}</h3>
-            <InputField minValue={0} maxValue={maxMarks}type="number" inputValue={mark} setter={setMark} placeholder="Marks to award"/>
+            {(maxMarks === 1)? 
+              (
+              <>
+              <button onClick={() => {setMark((mark + 1) % 2)}}>{mark===1?"Award mark": "Remove mark"}</button>
+              <p>Marks given: {mark}</p>
+              </>
+              )
+             :(
+             <InputField minValue={0} maxValue={maxMarks}type="number" inputValue={mark} setter={setMark} placeholder="Marks to award"/>)
+              }
             <button onClick={() => {setMarkForQuestion(questionNum,mark)}}>SaveMarks</button>
         </div>
     )
@@ -106,11 +115,6 @@ function MarkSubmission(){
                 <button onClick={() => {changeQuestion(-1, questionList.length)}}>Previous</button>
                 <button style ={{margin:"10px"}} onClick={() => changeQuestion(1, questionList.length)}> Next </button>
             </div>
-
-            <button onClick={()=>{console.log(questionList)}}>QUESTIOSN</button>
-            <button onClick={() =>{console.log(answers)}}>ANSWERS</button>
-            <button onClick={() => {console.log(marks)}}>Marks</button>
-            <button><Link to={returnAssignmentURL}>Return assignment</Link></button>
             <button onClick={() => {returnSubmission(marks,setStatus)}}>HI</button>
             {status===200? <p>Successs</p>:null}
         </header>

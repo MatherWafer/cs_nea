@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {getCookie, Navigation} from '../variousUtils.js'
+import {getCookie, Navigation} from '../variousUtils.tsx'
 import {
     BrowserRouter as Router,
     Routes,
@@ -8,7 +8,7 @@ import {
   } from "react-router-dom";
 
 
-async function submitAssignment(setStatus){
+async function submitAssignment(setStatus: (value:any) => void ){
     const URLForSubmission= window.location.href + `&student=${getCookie("userName")}`
     console.log(URLForSubmission)
     try{

@@ -1,22 +1,23 @@
-import Registration from './students/registration.js'
-import Login from './students/login.js'
-import Homepage from './students/homepage.js'
-import ViewStats from'./students/viewstats.js'
-import ViewAssignments from './students/viewAssignments.js'
-import StartPractice from './students/startPractice.js'
-import TeacherLogin from './teachers/teacherLogin.js'
-import TeacherRegistration from './teachers/teacherRegistration.js'
-import TeacherHomepage from './teachers/teacherHomepage.js'
-import ClassesNav from './teachers/classes/classesNav.js'
-import CreateClass from './teachers/classes/createClass.js'
-import SelectClass from './teachers/classes/selectClass.js'
-import ManageClass from './teachers/classes/manageClass.js'
-import AssignmentsNav from './teachers/assignments/assignmentsNav.js'
-import QuestionSetNav from './teachers/questionSets/questionsNav.js'
-import CreateQuestionSet from './teachers/questionSets/createQuestionSet.js'
-import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.js'
-import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.js'
-import CreateAssignment from './teachers/assignments/createAssignment.js'
+import Registration from './students/registration.tsx'
+import Login from './students/login.tsx'
+import Homepage from './students/homepage.tsx'
+import ViewStats from'./students/viewstats.tsx'
+import ViewAssignments from './students/viewAssignments.tsx'
+import StartPractice from './students/startPractice.jsx'
+import TeacherLogin from './teachers/teacherLogin.tsx'
+import TeacherRegistration from './teachers/teacherRegistration.tsx'
+import TeacherHomepage from './teachers/teacherHomepage.tsx'
+import ClassesNav from './teachers/classes/classesNav.tsx'
+import CreateClass from './teachers/classes/createClass.tsx'
+import SelectClass from './teachers/classes/selectClass.tsx'
+import ManageClass from './teachers/classes/manageClass.tsx'
+import AssignmentsNav from './teachers/assignments/assignmentsNav.tsx'
+import QuestionSetNav from './teachers/questionSets/questionsNav.tsx'
+import CreateQuestionSet from './teachers/questionSets/createQuestionSet.tsx'
+import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.tsx'
+import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.tsx'
+import CreateAssignment from './teachers/assignments/createAssignment.tsx'
+import GraphIntersect from './students/questions/graphsIntersection.tsx'
 import './styles/App.css';
 import React, { useState, useEffect} from 'react';
 
@@ -27,13 +28,15 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import {getCookie, StudentTab, TeacherTab } from './variousUtils.js'
-import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.js'
-import EditQuestion from './teachers/questionSets/editQuestion.js'
-import DoAssignment from './students/doAssignment.js'
-import SubmitAssignment from './students/submitAssignment.js'
-import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.js'
-import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.js'
+import {getCookie, StudentTab, TeacherTab } from './variousUtils.tsx'
+import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
+import EditQuestion from './teachers/questionSets/editQuestion.tsx'
+import DoAssignment from './students/doAssignment.tsx'
+import SubmitAssignment from './students/submitAssignment.tsx'
+import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.tsx'
+import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
+import PracticeNav from './students/practiceNav.tsx'
+import KruskalsAlgorithm from './students/questions/graphsKruskal.tsx'
 
 
 
@@ -73,9 +76,15 @@ function App() {
           <Route path='/do-assignment' element={<StudentTab component={<DoAssignment/>}/>}/>
           <Route path='/submit-assignment' element={<StudentTab component={<SubmitAssignment/>}/>}/>
           <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
-          <Route path='/startPractice' element={<StudentTab component={<StartPractice/>}/>}/>
+          <Route path='/startPractice' element={<StudentTab component={<PracticeNav/>}/>}/>
 
 
+          {/*
+          -----------------------------------------------------------------------------------------------------------
+          Routes for Questions
+        */}
+          <Route path="/graphs" element={<GraphIntersect/>}/>
+          <Route path="/kruskals-algorithm" element={<KruskalsAlgorithm/>}/>
           {/*
           --------------------------------------------------------------------------------------------------------------------
             ROUTES FOR TEACHER SIDE

@@ -1,6 +1,7 @@
 .App {
   text-align: center;
 }
+@import "mafs/core.css";
 
 .App-logo {
   height: 40vmin;
@@ -15,7 +16,7 @@
 
 table, th, td {
   border: 1px solid rgb(255, 255, 255);
-  background-color:rgba(135, 135, 135, 0.179);
+  background-color: #212121;
   color:rgba(255, 255, 255, 0.863)
   }
 .listContent{

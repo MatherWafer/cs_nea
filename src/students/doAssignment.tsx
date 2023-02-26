@@ -1,4 +1,4 @@
-import { getCookie, getResource, InputField, ListOfObjects } from '../variousUtils.js'
+import { getCookie, getResource, InputField, ListOfObjects } from '../variousUtils.tsx'
 import { Link } from "react-router-dom";
 import {useEffect, useState, useReducer} from "react"
 import React from "react";
@@ -165,6 +165,12 @@ function DoAssignment(){
             return(
                 <header className="App-header" style={{backgroundColor:"#FF0000"}}>
                     <h1>WHAT THE FUCK IS WRONG WITH YOU!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1.</h1>
+                </header>
+            )
+        default:
+            return(
+                <header className="App-header" style={{backgroundColor:"#FF0000"}}>
+                    <h1>What</h1>
                 </header>
             )
     }

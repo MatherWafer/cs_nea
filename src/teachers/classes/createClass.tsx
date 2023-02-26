@@ -1,4 +1,4 @@
-import { getCookie, InputField } from "../../variousUtils";
+import { getCookie, InputField } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useState} from "react"
 import React from "react";

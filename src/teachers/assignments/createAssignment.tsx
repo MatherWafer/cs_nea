@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getCookie, getResource, InputField } from '../../variousUtils';
+import { getCookie, getResource, InputField } from '../../variousUtils.tsx';
 import {
     Link
   } from "react-router-dom";

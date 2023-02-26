@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link, Navigate} from "react-router-dom"
-import {getCookie, InputField} from '../variousUtils.js'
+import {getCookie, InputField} from '../variousUtils.tsx'
 
 function Login(){
     const [username,setUsername] = useState("")
@@ -13,7 +13,6 @@ function Login(){
             }
 
     const submitLoginDetails = async (event) => {
-        console.log("Here we go");
         const request_content = {
             "method": 'POST',
             "body": JSON.stringify({
@@ -23,17 +22,12 @@ function Login(){
         }
         event.preventDefault();
         let res = await fetch("/login", request_content);
-        console.log("Received response");
-        console.log(res);
 
         
         try{
             let resJson = await res.json();
-            console.log("Received status");
             if (resJson.status === 200)
             {
-                console.log("Successful Login")
-                console.log(resJson["user-data"])
                 let studentData = JSON.parse(resJson["user-data"]);
                 document.cookie = `userName=${studentData.StudentID}`
                 document.cookie = `forename=${studentData.Forename}`

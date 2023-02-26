@@ -1,3 +1,4 @@
+import { Component } from "react";
 import {Navigate,Link} from "react-router-dom"
 function getCookie(nameOfCookie){
     let nameToFind = nameOfCookie +"=";
@@ -16,26 +17,37 @@ function getCookie(nameOfCookie){
     }
 }
 
-const TeacherTab = ({component}) => {
+interface TabProps{
+    component:JSX.Element
+}
+
+const TeacherTab = (props:TabProps) => {
     if (getCookie("isTeacher") === "true"){
-        return component
+        return props.component
     }
     return <Navigate to="/teacher-login" replace/>
 }
 
-const StudentTab = ({component}) => {
+const StudentTab = (props:TabProps) => {
     if (getCookie("userName") !== "notSet" && getCookie("isTeacher") === "false"){
-        return component
+        return props.component
     }
     return <Navigate to="/login" replace/>
 }
 
-function Navigation(props){
+interface NavigationProps {
+    navData: {url:string,
+               prompt:string}[]
+}
+
+function Navigation(props:NavigationProps){
     let navData = props.navData
     return <>
         {navData.map(x => <a><Link to={x.url}>{x.prompt}</Link></a>)}
         </>
 }
+
+
 
 function InputField(props){
     let inputValue = props.inputValue
@@ -49,13 +61,21 @@ function InputField(props){
     }
     if (type === "select"){
         let options = props.options
-        let identifier = props.identifier
-        let displayName = props.displayName
-        return(
-            <select value={inputValue} onChange={(e) => setter(e.target.value)}>
-                {options.map((x) => <option value={x[identifier]}> {x[displayName]}</option>)}
-            </select>
-        )
+        if (typeof options[0] === "object"){
+            let identifier = props.identifier
+            let displayName = props.displayName
+            return(
+                <select value={inputValue} onChange={(e) => setter(e.target.value)}>
+                    {options.map((x) => <option value={x[identifier]}> {x[displayName]}</option>)}
+                </select>
+            )}
+        else if (typeof options[0] === "string"){
+            return(
+                <select value={inputValue} onChange={(e) => setter(e.target.value)}>
+                    {options.map((x) => <option value={x}> {x}</option>)}
+                </select>
+            )
+        }
     }
     else{
     return(
@@ -64,9 +84,14 @@ function InputField(props){
         min={minValue}
         max={maxValue}
         placeholder={placeholder}
-        onChange={(e) => setter(e.target.value)}/>
+        onChange={(e) => setter(type==="number"?parseInt(e.target.value):e.target.value)}/>
     )}
+    return(
+        <></>
+    )
 }
+
+
 
 //PARAMETERISE GETTING LISTS OF OBJECTS???
 //  PASS IN URL, RETURN PARSED LIST

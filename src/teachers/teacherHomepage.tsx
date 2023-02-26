@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {getCookie, Navigation} from '../variousUtils.js'
+import {getCookie, Navigation} from '../variousUtils.tsx'
 import {
     BrowserRouter as Router,
     Link

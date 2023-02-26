@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { json } from "react-router-dom";
-import {getCookie, getResource, ListOfObjects} from '../variousUtils.js'
+import {getCookie, getResource, ListOfObjects} from '../variousUtils.tsx'
 
 
 async function getAssignments(setAssignmentList){

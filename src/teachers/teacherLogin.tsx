@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link,Navigate} from "react-router-dom"
-import {getCookie, InputField} from '../variousUtils.js'
+import {getCookie, InputField} from '../variousUtils.tsx'
 
 function TeacherLogin({setIsTeacher}){
     const [username,setUsername] = useState("")

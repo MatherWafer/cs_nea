@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {BrowserRouter} from "react-router-dom";
-import { InputField } from '../variousUtils';
+import { InputField } from '../variousUtils.tsx';
 
 
 
@@ -22,7 +22,9 @@ function RegistrationFormMessage() {
   else if (!success && hasSubmitted){ 
     return <p style={{color:"red"}}>That username already exists. Please select another</p>
   }
-
+  else{
+    return<></>
+  }
 }
 
 
@@ -92,8 +94,8 @@ function RegistrationForm() {
     <div className="App">
       <header className="App-header">
         <p> Current date is {currentTime}</p>
-        <RegistrationForm></RegistrationForm>
-        <RegistrationFormMessage></RegistrationFormMessage>
+        <RegistrationForm/>
+        <RegistrationFormMessage/>
       </header>
     </div>
   );

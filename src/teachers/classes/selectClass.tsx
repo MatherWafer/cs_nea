@@ -1,4 +1,4 @@
-import { getCookie, getResource, ListOfObjects } from "../../variousUtils";
+import { getCookie, getResource, ListOfObjects } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 

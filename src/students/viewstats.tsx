@@ -1,5 +1,5 @@
 import { json } from "react-router-dom";
-import {getCookie} from '../variousUtils.js'
+import {getCookie} from '../variousUtils.tsx'
 import { useState } from "react";
 
 

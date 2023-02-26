@@ -1,4 +1,4 @@
-import { getCookie, Navigation } from "../../variousUtils";
+import { getCookie, Navigation } from "../../variousUtils.tsx";
 import {Link} from "react-router-dom"
 function ClassesNav(){
     let navData = [{url:"/select-class", prompt: "Manage a class"},

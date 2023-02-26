@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils";
+import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
 
 
 function getListOfSets(setListOfSets){

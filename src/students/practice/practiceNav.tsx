@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 function PracticeNav(){
     let navData = [{url:"/graphs", prompt: "Graph intersections"},
                    {url:"/kruskals-algorithm", prompt: "Kruskal's Algorithm"},
-                   {url:"/chooseTopics", prompt:"Choose topics"}]                
+                   {url:"/choose-topics", prompt:"Choose topics"}]                
     return (
         <div className='App'>
                 <header className='App-header'>

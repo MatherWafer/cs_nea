@@ -12,7 +12,6 @@ function checkIfListsEquivalent(list1:any,list2:any):boolean{
   if(list1.length === list2.length){
     for(let i = 0; i < list1.length; i+=1){
       if(typeof list1[0] === "object"){
-        console.log("Comparing Objects")
         if (JSON.stringify(list1[i]) != JSON.stringify(list2[i])){
           return false
         }
@@ -36,7 +35,6 @@ interface DisjointSet {
   label : string
   rank: number
   find() : DisjointSet
-  log(): void
   incRank(): void
   setParent(newParent: DisjointSet): void
 }
@@ -46,11 +44,10 @@ function strSort(strInput:string):string{
 }
 
 function union(set1:DisjointSet, set2:DisjointSet):void{
-    if (set1.rank > set2.rank)
+    if (set1.find().rank > set2.find().rank)
         set2.find().setParent(set1)
-    else if (set2.rank > set1.rank){
+    else if (set2.find().rank > set1.find().rank){
         set1.find().setParent(set2)
-        set2.incRank()
     }
     else{
         set2.find().setParent(set1)
@@ -117,9 +114,7 @@ class DisjointSet{
             return this.parent.find()
         }
     }
-    log() : void {
-        console.log(`My name is ${this.label} and my parent is ${this.parent.label}`)
-    }
+    
     setParent(newParent: DisjointSet): void {
         this.parent = newParent
     }
@@ -220,7 +215,7 @@ function shuffle(value): Vector2[]{
   return Array.from(Array(value)).map(x=>randomCoord(50))
 }
 
-function KruskalsAlgorithm(){
+function KruskalsAlgorithm(props){
     const [numPoints,setNumPoints] = useState(6)
     const [points,setPoints] = useState(Array.from(Array(6)).map(x=>randomCoord(50)))
     const [triangulation,setTriangulation] = useState(getTriangulation(null,true,points))
@@ -234,8 +229,8 @@ function KruskalsAlgorithm(){
       setNumrows(numRows + 1)
       setUserEdgesChecked(userEdgesChecked.concat(Array.from(Array(1))))
     }
-
-
+    const qNum = Number(props.qNum)
+    const setResult = props.setResult
     const removeRow = () => {
       if(numRows > 1){
         setNumrows(numRows - 1)
@@ -244,19 +239,26 @@ function KruskalsAlgorithm(){
     }
 
     const checkViewedEdges = () => checkIfListsEquivalent(userEdgesChecked,mst.viewed)
-
+    const questionsCorrect = props.questionsCorrect
     function setRow(index,value){
       let newUserEdgesChecked = userEdgesChecked
       newUserEdgesChecked[index] = value
       setUserEdgesChecked(newUserEdgesChecked)
     }
 
+    const setIsCorrect = () =>{
+      let val = checkViewedEdges()
+      setCorrectCheckedEdges(val)
+      questionsCorrect[qNum] = val
+      setResult(questionsCorrect)           //PASS IN SETQUESTIONSCORRECT, QNUM, QUESITONS CORRECT
+    }
+
     return(
-      <header className='App-header'>
+        <>
           <button onClick={() => {setViewToggle(!viewToggle)}}>{viewToggle? "MST" : "Whole Graph"}</button>
           <button onClick={() => {console.log(userEdgesChecked)}}>Answers</button>
           <button onClick={() => {console.log(mst.viewed)}}>Actual nodes viewed</button>
-          <button onClick={() => {setCorrectCheckedEdges(checkViewedEdges)}}>Check</button>
+          <button onClick={setIsCorrect}>Check</button>
           <p>Find the minimum spanning tree of this graph using Kruskal's Algorithm. </p>
           <p>Show your working by inputting each edge which you inspect in the order 
             you do so, and whether or not you include it in the tree and include the tree's weight.</p>
@@ -309,13 +311,13 @@ function KruskalsAlgorithm(){
                             }
                     {points.map((k,index)=> 
                             <>  
-                              <Point svgCircleProps={{r:8}} color="#EEEEEE" opacity={1} x={k[0]} y={k[1]}/>
+                              <Point svgCircleProps={{r:12}} color="#EEEEEE" opacity={1} x={k[0]} y={k[1]}/>
                               <Text
                                   x={k[0]}
                                   y={k[1]-.25}
-                                  color="black"
+                                  color="#222222"
                                   attachDistance={0}
-                                  size={10}
+                                  size={18}
                                 >
                                   {String.fromCharCode(65+index)}
                               </Text>
@@ -324,7 +326,7 @@ function KruskalsAlgorithm(){
                   </Mafs>  
                 </div>
               </div>
-      </header>
+      </>
     )
 }
 

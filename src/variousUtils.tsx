@@ -48,14 +48,35 @@ function Navigation(props:NavigationProps){
 }
 
 
+interface numFieldProps{
+    inputValue:number
+    setter: (number) => void
+    placeholder: number
+    minValue: number
+    maxValue?: number
+    type:string
+}
+
+interface identifiedObject{
+    identifier:string
+    displayName:string
+}
+
+interface SelectFieldProps<Type>{
+    inputValue:string
+    setter:(string) => void
+    options: Type[]
+    identifier?: Type extends Object ? string: never
+    displayName?: Type extends Object ? string: never
+    type?: string
+}
+
 
 function InputField(props){
     let inputValue = props.inputValue
     let setter = props.setter
     let placeholder= props.placeholder
     let type = props.type
-    let minValue = props.minValue
-    let maxValue = props.maxValue
     if (!type){
         type = "text"
     }
@@ -78,6 +99,8 @@ function InputField(props){
         }
     }
     else{
+        let minValue = props.minValue
+        let maxValue = props.maxValue
     return(
         <input type={type}
         value={inputValue}
@@ -91,7 +114,14 @@ function InputField(props){
     )
 }
 
+function  SelectField(props:SelectFieldProps<string> | SelectFieldProps<object>){
+    return InputField(props)
+}
 
+
+function NumberField(props:numFieldProps){
+    return InputField(props)
+}
 
 //PARAMETERISE GETTING LISTS OF OBJECTS???
 //  PASS IN URL, RETURN PARSED LIST
@@ -179,4 +209,4 @@ function ListOfObjects(props){
 
 
 
-export {getCookie,TeacherTab,StudentTab,Navigation,InputField,getResource,ObjectOverview, ListOfObjects };
+export {getCookie,TeacherTab,StudentTab,Navigation,InputField, SelectField, NumberField, getResource,ObjectOverview, ListOfObjects};

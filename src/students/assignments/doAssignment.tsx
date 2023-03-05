@@ -1,4 +1,4 @@
-import { getCookie, getResource, InputField, ListOfObjects } from '../variousUtils.tsx'
+import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useEffect, useState, useReducer} from "react"
 import React from "react";

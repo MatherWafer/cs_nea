@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getCookie, getResource, InputField } from '../../variousUtils.tsx';
+import { getCookie, getResource, InputField, SelectField } from '../../variousUtils.tsx';
 import {
     Link
   } from "react-router-dom";
@@ -59,7 +59,8 @@ function CreateAssignment(){
         </label>
         <label>
           Class:
-        <InputField type="select" inputValue={classID} setter={setClassID} options={classList} identifier="ClassID" displayName="ClassName"/>
+        {/*<InputField type="select" inputValue={classID} setter={setClassID} options={classList} identifier="ClassID" displayName="ClassName"/>*/}
+        <SelectField inputValue={classID} setter={setClassID} options={classList}  identifier="ClassID" displayName="ClassName" type="select"/>
         </label>
         <label>
           Question Set:

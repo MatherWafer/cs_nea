@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import {Link, Navigate} from "react-router-dom"
-import {getCookie, InputField} from '../variousUtils.tsx'
+import {getCookie, InputField} from "../../variousUtils.tsx";
 
 function Login(){
     const [username,setUsername] = useState("")

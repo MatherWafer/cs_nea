@@ -2,7 +2,7 @@ import React, { useState, useEffect, SetStateAction, Dispatch} from 'react';
 import {Link} from "react-router-dom"
 import {Mafs,Coordinates, Line, Point, Polygon, Text, Plot} from "mafs"
 import { InputField, getCookie } from '../../variousUtils.tsx';
-import { resolveProjectReferencePath } from 'typescript';
+import { isPropertySignature, resolveProjectReferencePath } from 'typescript';
 import Latex from 'react-latex'
 import "katex/dist/katex.min.css";
 
@@ -122,8 +122,8 @@ function polynomial(x,coeffs){
     return coeffs.reduce((sum,coeff,power) => sum + coeff * (x ** power),0)
 }
 
-function GraphIntersect(){
-    const [roots, setRoots] = useState<number[]> ([3,3])
+function GraphIntersect(props){
+    const [roots, setRoots] = useState<number[]> (randRoots(2))
     const [coeffs, setCoeffs] = useState<number[]> (getCoeffs(roots))
     const [poly1, setPoly1] = useState<number[]>(randCoeffs(coeffs.length))
     const [poly2, setPoly2] = useState<number[]>(getComplementaryPoly(coeffs,poly1))
@@ -142,6 +142,14 @@ function GraphIntersect(){
 
     const poly1Curve = (x) => polynomial(x,poly1)
     const poly2Curve = (x) => polynomial(x,poly2)
+
+    const questionsCorrect = props.questionsCorrect
+    const setResult = props.setResult
+    const qNum = Number(props.qNum)
+    const setUserAnswer = () =>{
+
+    }
+
     const shufflePolys = () => {
         let newPoly1 = randCoeffs(coeffs.length)
         setPoly1(newPoly1)
@@ -159,14 +167,14 @@ function GraphIntersect(){
 
     const addRow = () =>{
         setNumSolns(numSolns + 1)
-        setUserAnswers(Array.from(Array(numSolns + 1)))
+        setUserAnswers(userAnswers.concat(Array.from(Array(1))))
       }
   
   
     const removeRow = () => {
         if(numSolns > 1){
           setNumSolns(numSolns - 1)
-          setUserAnswers(Array.from(Array(numSolns - 1))) 
+          setUserAnswers(userAnswers.slice(0,-1)) 
         }
       }
 
@@ -177,17 +185,14 @@ function GraphIntersect(){
     }
 
     function checkSoln():void{
-        if(checkIfListsEquivalent(Array.from(new Set(roots).keys()).sort(), Array.from(new Set(userAnswers).keys()).sort())){    //Convert to sets and sort to account for repeated roots. 
-            setIsCorrect(true)
-        }
-        else{
-            setIsCorrect(false)
-        }
+        let val = checkIfListsEquivalent(Array.from(new Set(roots).keys()).sort(), Array.from(new Set(userAnswers).keys()).sort())    //Convert to sets and sort to account for repeated roots.
+            setIsCorrect(val)
+            questionsCorrect[qNum] = val
+            setResult(questionsCorrect)    
     }
 
     return(
-
-        <header className="App-header">
+        <>
             <InputField type="number" setter={shuffleRoots}></InputField>
             <h1>Solution: <Latex>{getPoly(coeffs).join(" ")}</Latex></h1>
             <p>Find the points of intersection of <Latex>{getPoly(poly1).join(" ")}</Latex> and <br/> <Latex>{getPoly(poly2).join(" ")}</Latex> </p>
@@ -196,7 +201,8 @@ function GraphIntersect(){
             <button onClick={() =>{console.log(userAnswers)}}>Check roots</button>
             {isCorrect? <h1>Correct</h1>:isCorrect===false?<h1>Wrong</h1>:null}
             <div>
-                <div>
+                {/*
+                <div> 
                     <Mafs width={500} viewBox={{x:[-30,30], y:[-40,100]}}>
                         <Plot.OfX y={poly1Curve} weight={3} color="blue"/>
                         <Plot.OfX y={poly2Curve} weight={3} color="red"/>
@@ -210,6 +216,7 @@ function GraphIntersect(){
                                                 }}/>
                     </Mafs>
                 </div>
+                                            */}
                     <button onClick={addRow}>Add</button>
                     <button onClick={removeRow}>Remove</button>
                         <table>
@@ -225,8 +232,7 @@ function GraphIntersect(){
                             </tbody>                                                                  
                         </table>
             </div>
-        </header>
-
+        </>
     )
 }
 

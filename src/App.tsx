@@ -1,8 +1,8 @@
-import Registration from './students/registration.tsx'
-import Login from './students/login.tsx'
-import Homepage from './students/homepage.tsx'
+import Registration from './students/home-login/registration.tsx'
+import Login from './students/home-login/login.tsx'
+import Homepage from './students/home-login/homepage.tsx'
 import ViewStats from'./students/viewstats.tsx'
-import ViewAssignments from './students/viewAssignments.tsx'
+import ViewAssignments from './students/assignments/viewAssignments.tsx'
 import StartPractice from './students/startPractice.jsx'
 import TeacherLogin from './teachers/teacherLogin.tsx'
 import TeacherRegistration from './teachers/teacherRegistration.tsx'
@@ -31,12 +31,14 @@ import {
 import {getCookie, StudentTab, TeacherTab } from './variousUtils.tsx'
 import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
 import EditQuestion from './teachers/questionSets/editQuestion.tsx'
-import DoAssignment from './students/doAssignment.tsx'
-import SubmitAssignment from './students/submitAssignment.tsx'
+import DoAssignment from './students/assignments/doAssignment.tsx'
+import SubmitAssignment from './students/assignments/submitAssignment.tsx'
 import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.tsx'
 import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
-import PracticeNav from './students/practiceNav.tsx'
+import PracticeNav from './students/practice/practiceNav.tsx'
 import KruskalsAlgorithm from './students/questions/graphsKruskal.tsx'
+import ChooseTopics from './students/practice/chooseTopics.tsx'
+import DoPracticeMode from './students/practice/doPracticemode.tsx'
 
 
 
@@ -76,9 +78,15 @@ function App() {
           <Route path='/do-assignment' element={<StudentTab component={<DoAssignment/>}/>}/>
           <Route path='/submit-assignment' element={<StudentTab component={<SubmitAssignment/>}/>}/>
           <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
+
+
+            {/*
+          -----------------------------------------------------------------------------------------------------------
+          Routes for Practice
+        */}
           <Route path='/startPractice' element={<StudentTab component={<PracticeNav/>}/>}/>
-
-
+          <Route path='/chooseTopics' element={<StudentTab component={<ChooseTopics/>}/>}/>
+          <Route path='/practice-mode' element={<StudentTab component={<DoPracticeMode/>}/>}/>
           {/*
           -----------------------------------------------------------------------------------------------------------
           Routes for Questions

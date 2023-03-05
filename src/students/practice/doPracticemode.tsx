@@ -4,23 +4,14 @@ import KruskalsAlgorithm from "../questions/graphsKruskal.tsx";
 import GraphIntersect from "../questions/graphsIntersection.tsx";
 import { JsxElement } from "typescript";
 import { parse } from "path";
+import { type } from "os";
+import { getCookie } from "../../variousUtils.tsx";
 const assignmentsToQuestions = {
     "KruskalAlgorithm": KruskalsAlgorithm,
     "GraphIntersections": GraphIntersect
 }
 
-function PracticeQuestion(props){
-    return (
-    <>
-    {props.component}    
-    </>
-    )
-}
 
-function isEmptyObj(obj){
-    for (var x in obj){return false}
-    return true;
-}
 
 function setQuestionAmounts(){
     const URLparams = new URLSearchParams(window.location.search)
@@ -36,16 +27,63 @@ function setQuestionAmounts(){
 
 function getQuestionsInList(questionTypesAndCounts: {[qType:string]:number}, setUserResult:(any) => void, questionsCorrect:any):JSX.Element[]{
     let questions = new Array
-    let qIndex = 0
+    let questionIndex = 0
     for(const typeAndCount of Object.entries(questionTypesAndCounts)){
         for(let i = 0; i < typeAndCount[1]; i++){
             let CurComponent= assignmentsToQuestions[typeAndCount[0]]
-            questions.push(<CurComponent key={qIndex} setResult={setUserResult} qNum ={qIndex} questionsCorrect={questionsCorrect}/>)
-            qIndex ++
+            questions.push(<CurComponent key={questionIndex} setResult={setUserResult} qNum ={questionIndex} questionsCorrect={questionsCorrect}/>)
+            questionIndex ++
             //questions.push(assignmentsToQuestions[typeAndCount[0]]({key:i,setResult:((isCorrect:boolean) => setUserResult(i,isCorrect))}))
         }
     }
     return questions;
+}
+
+
+interface resultByTopic{
+    [questionType:string]:{questionsAnswered:number, 
+                          questionsCorrect:number}
+}
+
+function getQuestionsCorrectByTopic(questionTypesAndCounts:{[qType:string]:number}, questionsCorrect:boolean[]):resultByTopic[] | string{
+    let QuestionsCorrectByTopic: resultByTopic = {};
+    let questionIndex = 0
+
+    for(const typeAndCount of Object.entries(questionTypesAndCounts)){
+        let numberCorrect = 0 
+        for(let i = 0; i < typeAndCount[1]; i++){
+            if(questionsCorrect[questionIndex]){
+                numberCorrect++
+            }
+            questionIndex ++
+        }
+        QuestionsCorrectByTopic[typeAndCount[0]] = {
+                                      questionsAnswered:typeAndCount[1],
+                                      questionsCorrect:numberCorrect}
+    }
+    return JSON.stringify(QuestionsCorrectByTopic);
+}
+
+async function submitResults(event, questionsCorrect){
+    let userID = getCookie("userName")
+    let requestData = {method:"POST",
+                       body:questionsCorrect}
+    event.preventDefault()     
+    console.log(questionsCorrect)                  
+    try{
+        let res = await fetch(`/practice-mode?student=${userID}`, requestData)
+        let resJSon = await res.json()
+        if(resJSon.status === 200){
+            console.log("ALl good")
+        }
+        else{
+            console.log("Sus")
+        }
+        window.location.href= "/"
+    }
+    catch{
+        console.log("Hmm")
+    }
 }
 
 function DoPracticeMode() {
@@ -70,7 +108,7 @@ function DoPracticeMode() {
     }
     return (
         <header className="App-header">
-            {!questionsCorrect.includes(null)?<button>Submit</button>:<p>Attempt every question to submit.</p>}
+            {!questionsCorrect.includes(null)?<button onClick={(e) => {submitResults(e,getQuestionsCorrectByTopic(numsOfQuestions,questionsCorrect as boolean[]))}}>Submit</button>:<p>Attempt every question to submit.</p>} 
             <h1>Question {questionNumber + 1} / {questionComponentsInList.length}</h1>
             <button onClick={() => console.log(numsOfQuestions)}>I</button>
             <button onClick={() => console.log(questionsCorrect)}>H</button>

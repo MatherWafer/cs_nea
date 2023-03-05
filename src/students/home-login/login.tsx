@@ -29,9 +29,12 @@ function Login(){
             if (resJson.status === 200)
             {
                 let studentData = JSON.parse(resJson["user-data"]);
-                document.cookie = `userName=${studentData.StudentID}`
-                document.cookie = `forename=${studentData.Forename}`
-                document.cookie = `surname=${studentData.Surname}`
+                const endDate = new Date();
+                endDate.setTime(endDate.getTime() + (2*24*60*60*1000));
+                let endTime = endDate.toUTCString()
+                document.cookie = `userName=${studentData.StudentID};expires=${endTime}`
+                document.cookie = `forename=${studentData.Forename};expires=${endTime}`
+                document.cookie = `surname=${studentData.Surname};expires=${endTime}`
             }
             else if(resJson.status === 400){
                 console.log("Incorrect Password")

@@ -23,7 +23,7 @@ function Homepage (){
     else{
         let navData = [{url:"/assignments", prompt:"Assignments"},
                        {url:"/skills", prompt:"Skills"},
-                       {url:"/startPractice", prompt:"Start practice"}]
+                       {url:"/choose-topics", prompt:"Start practice"}]
         let forename = getCookie("forename");
         let surname = getCookie("surname");
         return( <div className='App'>

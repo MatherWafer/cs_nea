@@ -1,44 +1,43 @@
-import Registration from './students/home-login/registration.tsx'
-import Login from './students/home-login/login.tsx'
-import Homepage from './students/home-login/homepage.tsx'
-import ViewStats from'./students/viewstats.tsx'
+import { useState } from 'react'
 import ViewAssignments from './students/assignments/viewAssignments.tsx'
-import StartPractice from './students/startPractice.jsx'
-import TeacherLogin from './teachers/teacherLogin.tsx'
-import TeacherRegistration from './teachers/teacherRegistration.tsx'
-import TeacherHomepage from './teachers/teacherHomepage.tsx'
+import Homepage from './students/home-login/homepage.tsx'
+import Login from './students/home-login/login.tsx'
+import Registration from './students/home-login/registration.tsx'
+import GraphIntersect from './students/questions/graphsIntersection.tsx'
+import ViewStats from './students/viewstats.tsx'
+import './styles/App.css'
+import AssignmentsNav from './teachers/assignments/assignmentsNav.tsx'
+import CreateAssignment from './teachers/assignments/createAssignment.tsx'
 import ClassesNav from './teachers/classes/classesNav.tsx'
 import CreateClass from './teachers/classes/createClass.tsx'
-import SelectClass from './teachers/classes/selectClass.tsx'
 import ManageClass from './teachers/classes/manageClass.tsx'
-import AssignmentsNav from './teachers/assignments/assignmentsNav.tsx'
-import QuestionSetNav from './teachers/questionSets/questionsNav.tsx'
+import SelectClass from './teachers/classes/selectClass.tsx'
 import CreateQuestionSet from './teachers/questionSets/createQuestionSet.tsx'
-import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.tsx'
 import ManageQuestionSet from './teachers/questionSets/manageQuestionSet.tsx'
-import CreateAssignment from './teachers/assignments/createAssignment.tsx'
-import GraphIntersect from './students/questions/graphsIntersection.tsx'
-import './styles/App.css';
-import React, { useState, useEffect} from 'react';
+import QuestionSetNav from './teachers/questionSets/questionsNav.tsx'
+import SelectQuestionSet from './teachers/questionSets/selectQuestionSet.tsx'
+import TeacherHomepage from './teachers/teacherHomepage.tsx'
+import TeacherLogin from './teachers/teacherLogin.tsx'
+import TeacherRegistration from './teachers/teacherRegistration.tsx'
 
 
 import {
-  BrowserRouter as Router,
-  Routes,
+  Link,
   Route,
-  Link
-} from "react-router-dom";
-import {getCookie, StudentTab, TeacherTab } from './variousUtils.tsx'
-import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
-import EditQuestion from './teachers/questionSets/editQuestion.tsx'
+  BrowserRouter as Router,
+  Routes
+} from "react-router-dom"
 import DoAssignment from './students/assignments/doAssignment.tsx'
 import SubmitAssignment from './students/assignments/submitAssignment.tsx'
-import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.tsx'
-import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
-import PracticeNav from './students/practice/practiceNav.tsx'
-import KruskalsAlgorithm from './students/questions/graphsKruskal.tsx'
 import ChooseTopics from './students/practice/chooseTopics.tsx'
 import DoPracticeMode from './students/practice/doPracticemode.tsx'
+import PracticeNav from './students/practice/practiceNav.tsx'
+import KruskalsAlgorithm from './students/questions/graphsKruskal.tsx'
+import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissions.tsx'
+import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
+import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
+import EditQuestion from './teachers/questionSets/editQuestion.tsx'
+import { StudentTab, TeacherTab } from './variousUtils.tsx'
 
 
 
@@ -85,7 +84,7 @@ function App() {
           Routes for Practice
         */}
           <Route path='/startPractice' element={<StudentTab component={<PracticeNav/>}/>}/>
-          <Route path='/chooseTopics' element={<StudentTab component={<ChooseTopics/>}/>}/>
+          <Route path='/choose-topics' element={<StudentTab component={<ChooseTopics/>}/>}/>
           <Route path='/practice-mode' element={<StudentTab component={<DoPracticeMode/>}/>}/>
           {/*
           -----------------------------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ type Vector2 = [x: number, y: number];
 
 
 
-function checkIfListsEquivalent(list1:any,list2:any):boolean{
+function checkIfListsEquivalent(list1:any[],list2:any[]):boolean{
   if(list1.length === list2.length){
     for(let i = 0; i < list1.length; i+=1){
       if(typeof list1[0] === "object"){

@@ -45,7 +45,7 @@ interface resultByTopic{
                           questionsCorrect:number}
 }
 
-function getQuestionsCorrectByTopic(questionTypesAndCounts:{[qType:string]:number}, questionsCorrect:boolean[]):resultByTopic[] | string{
+function getQuestionsCorrectByTopic(questionTypesAndCounts:{[qType:string]:number}, questionsCorrect:boolean[]):string{
     let QuestionsCorrectByTopic: resultByTopic = {};
     let questionIndex = 0
 

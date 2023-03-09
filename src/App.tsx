@@ -69,7 +69,7 @@ function App() {
           {/*
             ROUTES FOR STUDENT SIDE
           */}
-          <Route path='/' element={<Homepage/>}/>
+          <Route path='/' element={<StudentTab component={<Homepage/>}/>}/>
           <Route path='/registration' element= {<Registration/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/view-stats' element={<StudentTab component={<ViewStats/>}/>}/>

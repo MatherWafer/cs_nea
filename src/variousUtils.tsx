@@ -15,6 +15,7 @@ function getCookie(nameOfCookie){
             return thisCookie.substring(nameToFind.length, thisCookie.length)
         }
     }
+    return null
 }
 
 interface TabProps{

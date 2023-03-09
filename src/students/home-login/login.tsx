@@ -35,6 +35,7 @@ function Login(){
                 document.cookie = `userName=${studentData.StudentID};expires=${endTime}`
                 document.cookie = `forename=${studentData.Forename};expires=${endTime}`
                 document.cookie = `surname=${studentData.Surname};expires=${endTime}`
+                document.cookie = `isTeacher=false;expires=${endTime}`
             }
             else if(resJson.status === 400){
                 console.log("Incorrect Password")
@@ -49,7 +50,7 @@ function Login(){
         }
         }
     
-    return getCookie('userName') === "notSet" ?
+    return getCookie('userName') === null?
     <div className='App'>
         <header className="App-header">
             <h1>Log in</h1>
@@ -65,7 +66,7 @@ function Login(){
     :
     <header className='App-header'>
         <h1>Logged in!</h1>
-        <li><Navigate to="/">Homepage</Navigate></li>
+        <Navigate to="/">Homepage</Navigate>
     </header>
 
 }

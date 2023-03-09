@@ -118,7 +118,7 @@ def get_assignments():
 def get_skills():
     this_id = request.args.get('user',type = str)
     conn = get_db()
-    skills = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT SubjectName, Proficiency FROM tblSubjectSkill WHERE StudentID = "{this_id}"; """).fetchall()])
+    skills = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT SubjectName, TotalCorrect, TotalAnsweredw FROM tblSubjectSkill WHERE StudentID = "{this_id}"; """).fetchall()])
     return{"status":200,
            "skills":skills}
 
@@ -396,11 +396,11 @@ def submit_practice_mode_results():
     request_data = json.loads(request.data)
     subject_results = request_data
     subject_names = list(subject_results.keys())
-    print(subject_names)
+    current_date = datetime.now()
+    date_for_query = current_date.strftime("%Y-%m-%d")
     subject_names_for_query = ','.join([f"'{x}'" for x in subject_names])
     conn = get_db()
     skill_exists =  list(map(lambda x: x[0],conn.execute(f"""SELECT SubjectName FROM tblSubjectSkill WHERE StudentID = "{this_studentID}" AND SubjectName in({subject_names_for_query}) ;""").fetchall()))
-    print(skill_exists)
     if skill_exists:
         existing_skills_for_query = ','.join([f"'{x}'" for x in skill_exists])
         case_statement_for_update = "\n".join([f"WHEN '{subject_name}' THEN TotalAnswered + {subject_results[subject_name]['questionsAnswered']}" for subject_name in skill_exists]) + f"\nEND\nWHERE SubjectName in ({existing_skills_for_query})"
@@ -418,6 +418,52 @@ def submit_practice_mode_results():
                 {case_statement_for_update}
             AND StudentID="{this_studentID}" ;"""
         conn.execute(query_string)
+    current_percentages_dict = {}    
+    current_percentages_rows = conn.execute(f"""SELECT SubjectName, (100 * CAST(TotalCorrect AS REAL) / TotalAnswered) AS PercentCorrect  FROM tblSubjectSkill
+                            WHERE StudentID = "{this_studentID}"
+                            AND SubjectName IN ({subject_names_for_query})""").fetchall()
+        
+    for row in current_percentages_rows:
+        current_percentages_dict[row[0]] = row[1]
+    milestone_exists = list(map(lambda x:x[0], conn.execute(f"""SELECT SkillName FROM tblSkillMileStone WHERE StudentID = "{this_studentID}" AND SkillName in({subject_names_for_query})""").fetchall()))
+    print(current_percentages_dict)
+    if milestone_exists:
+        milestone_names_for_query = ','.join([f"'{x}'" for x in milestone_exists])
+        latest_milestones_dict = {}
+        latest_milestones_rows = conn.execute(f"""
+                            SELECT tblSkillMilestone.SkillName,Percentage
+                            FROM tblSkillMilestone 
+                            INNER JOIN     
+                                (
+                                    SELECT    SkillName, Max(DateAchieved) as DateAchieved
+                                    FROM      tblSkillMilestone
+                                    WHERE StudentID = "{this_studentID}"
+                                    GROUP BY SkillName
+                                ) AS maxTimes
+                            ON            tblSkillMilestone.SkillName = maxTimes.SkillName
+                            AND           tblSkillMilestone.DateAchieved = maxTimes.DateAchieved
+                            WHERE tblSkillMilestone.SkillName in({milestone_names_for_query})                  
+             """)
+        for row in latest_milestones_rows:
+            latest_milestones_dict[row[0]] = row[1]
+
+        print(latest_milestones_dict)
+        new_milestones= []
+        for skill_name in milestone_exists:
+            if abs(current_percentages_dict[skill_name] - latest_milestones_dict[skill_name]) > 5:
+                new_milestones.append(skill_name)
+        new_milestone_records = "\n".join(list(map( lambda cur_skill_name: f"('{this_studentID}', '{cur_skill_name}', '{date_for_query}', {current_percentages_dict[cur_skill_name]})"
+        ,milestone_exists)))
+
+        conn.execute(f"""INSERT INTO tblSkillMilestone
+                          VALUES {new_milestone_records} """)
+    
+    milestone_not_exists = [x for x in subject_names if x not in milestone_exists]
+    if milestone_not_exists:
+            new_milestone_records = "\n".join(list(map(lambda cur_skill_name: f"('{this_studentID}', '{cur_skill_name}', '{date_for_query}', {current_percentages_dict[cur_skill_name]})",milestone_not_exists)))
+            conn.execute(f"""INSERT INTO tblSkillMilestone
+                             VALUES{new_milestone_records}
+            ;""")
     skill_not_exists = [x for x in subject_names if x not in skill_exists]
     if skill_not_exists:
         newSkillValues = list(map(lambda skill_name: f"('{this_studentID}', '{skill_name}', {subject_results[skill_name]['questionsAnswered']}, {subject_results[skill_name]['questionsCorrect']})",skill_not_exists))

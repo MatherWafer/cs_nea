@@ -1,5 +1,6 @@
 import { Component } from "react";
 import {Navigate,Link} from "react-router-dom"
+
 function getCookie(nameOfCookie){
     let nameToFind = nameOfCookie +"=";
     let cleanedCookie = decodeURIComponent(document.cookie)
@@ -169,6 +170,15 @@ async function getResource(resourceURL,resourceName,setter,multipleResources=fal
     }
 }
 
+
+interface objectListProps{
+
+    resourceList:object[]
+    prompts:{[propertyName:string]:string}
+    baseManageURL: string
+    identifier:string
+}
+
 function ObjectOverview(props){
     let thisObject = props.thisObject
     let listOfKeys = Object.getOwnPropertyNames(thisObject)
@@ -187,7 +197,7 @@ function ObjectOverview(props){
     )
 }
 
-function ListOfObjects(props){
+function ListOfObjects(props:objectListProps){
     let resourceList = props.resourceList
     let prompts = props.prompts
     let baseManageURL = props.baseManageURL

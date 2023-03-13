@@ -55,7 +55,7 @@ function TeacherLogin({setIsTeacher}){
         }
     
     
-    return getCookie('userName') === "notSet" ?
+    return getCookie('userName') === null && getCookie('isTeacher') != "true"   ?
         <div className='App'>
             <header className="App-header">
                 <h1>Teacher log in:</h1>

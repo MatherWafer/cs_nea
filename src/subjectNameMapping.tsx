@@ -5,4 +5,6 @@ const SKILL_NAMES_AND_QUESTIONS = {
                          name:"Kruskal's Algorithm"},
     "GraphIntersections": {questionComponent:GraphIntersect,
                          name:"Solving intersections of graphs"}
-}3
+}
+
+export {SKILL_NAMES_AND_QUESTIONS}

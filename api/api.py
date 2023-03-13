@@ -1,10 +1,11 @@
 import json
 import sqlite3
 from datetime import date, datetime
-
+import flask
 from flask import Flask, flash, jsonify, request
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
+                               unset_jwt_cookies, jwt_required, JWTManager
 app = Flask(__name__)
 db_file = "db.db"
 from db import close_db, get_db
@@ -118,7 +119,7 @@ def get_assignments():
 def get_skills():
     this_id = request.args.get('user',type = str)
     conn = get_db()
-    skills = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT SubjectName, TotalCorrect, TotalAnsweredw FROM tblSubjectSkill WHERE StudentID = "{this_id}"; """).fetchall()])
+    skills = list([json.dumps(dict(currentRow)) for currentRow in conn.execute(f"""SELECT SubjectName, TotalCorrect, TotalAnswered, (100 * CAST(TotalCorrect AS REAL) / TotalAnswered) AS PercentCorrect  FROM tblSubjectSkill WHERE StudentID = "{this_id}"; """).fetchall()])
     return{"status":200,
            "skills":skills}
 
@@ -126,7 +127,7 @@ def get_skills():
 @app.route('/select-class',methods=(['GET']))
 def get_classes():
     this_id = request.args.get('user',type = str)
-    print(this_id)
+
     classes = query_as_json(f"""SELECT ClassID, ClassName FROM tblClass WHERE TeacherID = "{this_id}" """)
     return{"status":200,
            "classes":classes}
@@ -142,13 +143,10 @@ def get_students():
     elif request.method == 'PUT':
         #method != GET => method = PUT
         request_data = json.loads(request.data)
-        print(request_data)
         this_studentID = request_data["studentID"]
         this_classID = request.args.get("class", type = str)
-        print(this_studentID)
         conn = get_db()
         doesExist = conn.execute(f"""SELECT EXISTS(SELECT 1 FROM tblStudent WHERE StudentID = "{this_studentID}");""").fetchone()[0]
-        print(doesExist)
         if doesExist == 0: return {"status":404}
         conn.execute(f"""UPDATE tblStudent
                             SET ClassID = "{this_classID}" WHERE StudentID = "{this_studentID}";""")
@@ -472,6 +470,23 @@ def submit_practice_mode_results():
                             VALUES {skills_to_add}""")
     conn.commit()
     return{"status":200}
+
+@app.route("/view-milestones",methods=(['GET']))
+def view_milestones():
+    this_studentID = request.args.get('student', type = str)
+    this_skillName = request.args.get('skillName', type = str)
+    try:
+        milestones = query_as_json(f"""SELECT DateAchieved, Percentage FROM tblSkillMilestone
+                                       WHERE StudentID = "{this_studentID}"
+                                       AND SkillName = "{this_skillName}"; """)
+        return{
+            "status":200,
+            "milestones":milestones
+        }
+    except:
+        return{"status":500}
+
+
 
 #def get_submission_and_questions():
 #    this_assignment_id = request.args.get('assignmentID', type = str)

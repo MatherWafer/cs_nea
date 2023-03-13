@@ -4,7 +4,7 @@ import Homepage from './students/home-login/homepage.tsx'
 import Login from './students/home-login/login.tsx'
 import Registration from './students/home-login/registration.tsx'
 import GraphIntersect from './students/questions/graphsIntersection.tsx'
-import ViewStats from './students/viewstats.tsx'
+import ViewStats from './students/datascience/viewstats.tsx'
 import './styles/App.css'
 import AssignmentsNav from './teachers/assignments/assignmentsNav.tsx'
 import CreateAssignment from './teachers/assignments/createAssignment.tsx'
@@ -37,7 +37,8 @@ import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissi
 import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
 import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
 import EditQuestion from './teachers/questionSets/editQuestion.tsx'
-import { StudentTab, TeacherTab } from './variousUtils.tsx'
+import { StudentTab, TeacherTab, getCookie } from './variousUtils.tsx'
+import ViewMilestone from './students/datascience/viewMilestones.tsx'
 
 
 
@@ -56,6 +57,7 @@ function App() {
           <li><Link to="/registration">Registration</Link></li>
           <li><Link to="/">Homepage</Link></li>
           <li><Link to="/login">Login</Link></li>
+      
         </ul>
       </nav>
   }
@@ -69,15 +71,24 @@ function App() {
           {/*
             ROUTES FOR STUDENT SIDE
           */}
-          <Route path='/' element={<StudentTab component={<Homepage/>}/>}/>
+          <Route path='/' element={getCookie("isTeacher") === "false"?<StudentTab component={<Homepage/>}/>: <TeacherTab component={<TeacherHomepage/>}/>}/>
           <Route path='/registration' element= {<Registration/>}/>
           <Route path='/login' element={<Login/>}/>
-          <Route path='/view-stats' element={<StudentTab component={<ViewStats/>}/>}/>
+
+          {/* 
+          --------------------------------------------------------------------------------------------------------------------------------
+          Routes for assignments
+          */}
           <Route path='/assignments' element={<StudentTab component={<ViewAssignments/>}/>}/>
           <Route path='/do-assignment' element={<StudentTab component={<DoAssignment/>}/>}/>
           <Route path='/submit-assignment' element={<StudentTab component={<SubmitAssignment/>}/>}/>
-          <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
 
+          {/*
+          -------------------------------------------------------------------------------------------------------------------------------- 
+          Routes for skill levels & milestones
+        */}
+          <Route path='/skills' element={<StudentTab component={<ViewStats/>}/>}/>
+          <Route path='/view-milestones' element={<StudentTab component={<ViewMilestone/>}/>}/>
 
             {/*
           -----------------------------------------------------------------------------------------------------------
@@ -99,7 +110,7 @@ function App() {
 
           <Route path='/teacher-login' element={<TeacherLogin setIsTeacher={setIsTeacher}/>}/>
           <Route path='/teacher-register' element={<TeacherRegistration/>}/>
-          <Route path='/teacher-homepage' element={<TeacherTab component={<TeacherHomepage/>}/>}/>
+          <Route path='/teacher-homepage' element={<TeacherHomepage/>}/>
           {/*
             Routes for teacher class functionality
           */}

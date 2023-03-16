@@ -1,4 +1,4 @@
-import { getCookie, InputField } from "../../variousUtils.tsx";
+import { fetchProtected, getCookie, InputField } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useState} from "react"
 import React from "react";
@@ -15,7 +15,8 @@ function CreateClass() {
     const submitClassDetails = async (event) =>{
         event.preventDefault();
         try{
-            let res = await fetch("/create-class",{
+            /*
+            let res = await fetchProtected("/create-class",{
                 method: "POST",
                 headers: {contentType: 'application/json'},
                 body: JSON.stringify({
@@ -25,10 +26,21 @@ function CreateClass() {
                 })
             });
             
+
             console.log("Submitted Class Details To API")
             console.log(res);
+            */
+            let resJson = await fetchProtected("/create-class",{
+                method:"POST",
+                headers:{contentType:'application/json'},
+                body: JSON.stringify({
+                    classID : classID,
+                    className: className,
+                    teacherID: teacherID
+                })
+            })
             try{
-                let resJson = await res.json();
+                //let resJson = await res.json();
                 console.log(`Received with status ${resJson.status}`)
                 setLastStatus(resJson.status)
                 if (resJson.status === 200)

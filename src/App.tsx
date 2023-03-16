@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ViewAssignments from './students/assignments/viewAssignments.tsx'
 import Homepage from './students/home-login/homepage.tsx'
 import Login from './students/home-login/login.tsx'
@@ -37,15 +37,32 @@ import MarkSubmission from './teachers/classes/assignments-by-class/markSubmissi
 import ReturnSubmission from './teachers/classes/assignments-by-class/returnSubmission.tsx'
 import ViewSubmissions from './teachers/classes/assignments-by-class/viewSubmissions.tsx'
 import EditQuestion from './teachers/questionSets/editQuestion.tsx'
-import { StudentTab, TeacherTab, getCookie } from './variousUtils.tsx'
+import { StudentTab, TeacherTab, fetchProtected, getCookie, checkStoredToken } from './variousUtils.tsx'
 import ViewMilestone from './students/datascience/viewMilestones.tsx'
+import { rmSync } from 'fs'
+
+const logoutUser = async (setSignedIn,setIsTeacher) => {
+  let currentToken = localStorage.getItem('token')
+  let resJSON = await fetchProtected('/logout',{method:'POST'})
+  document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  console.log(resJSON)
+  if (resJSON.status == 200){
+    setSignedIn(false)
+    setIsTeacher(false)
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  }
+}
+
+interface LogoutButtonProps{
+  setSignedIn: (boolean) => void
+  setIsTeacher: (boolean) => void
+}
 
 
-
-function App() {
-  const [isTeacher, setIsTeacher] = useState(false);
-  function Navbar(){
-    return isTeacher ?
+function Navbar(props){
+  return props.signedIn ?
+    (props.isTeacher?
       <nav>
         <ul>
           <li><Link to="/teacher-homepage">Homepage</Link></li>
@@ -60,20 +77,36 @@ function App() {
       
         </ul>
       </nav>
-  }
-  
+    )
+    :
+    <></>
+}
+
+
+
+const setLoginFromStoredToken = async (setSignedIn,setIsTeacher) =>{
+  let [signedIn,isTeacher] = await checkStoredToken()
+  setSignedIn(signedIn)
+  setIsTeacher(isTeacher)
+}
+
+function App() {
+  const [isTeacher, setIsTeacher] = useState(false);
+  const [signedIn,setSignedIn] = useState(false)
+
+  useEffect(() => {setLoginFromStoredToken(setSignedIn,setIsTeacher)},[])
   return (
     <Router>
       <div style={{backgroundColor:"#222222"}}>
-        <Navbar></Navbar>
+        <Navbar isTeacher={isTeacher} signedIn={signedIn}/>
+        {signedIn && <button onClick={() => logoutUser(setSignedIn,setIsTeacher)}>Log out </button>}
         <Routes>
-
           {/*
             ROUTES FOR STUDENT SIDE
           */}
-          <Route path='/' element={getCookie("isTeacher") === "false"?<StudentTab component={<Homepage/>}/>: <TeacherTab component={<TeacherHomepage/>}/>}/>
+          <Route path='/' element={signedIn?(!isTeacher?<StudentTab component={<Homepage/>}/>: <TeacherTab component={<TeacherHomepage/>}/>):<Login setSignedIn={setSignedIn}/>}/>
           <Route path='/registration' element= {<Registration/>}/>
-          <Route path='/login' element={<Login/>}/>
+          <Route path='/login' element={<Login setSignedIn={setSignedIn}/>}/>
 
           {/* 
           --------------------------------------------------------------------------------------------------------------------------------
@@ -108,7 +141,7 @@ function App() {
             ROUTES FOR TEACHER SIDE
           */}
 
-          <Route path='/teacher-login' element={<TeacherLogin setIsTeacher={setIsTeacher}/>}/>
+          <Route path='/teacher-login' element={<TeacherLogin setIsTeacher={setIsTeacher} setSignedIn={setSignedIn}/>}/>
           <Route path='/teacher-register' element={<TeacherRegistration/>}/>
           <Route path='/teacher-homepage' element={<TeacherHomepage/>}/>
           {/*

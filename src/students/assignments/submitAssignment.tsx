@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getCookie,Navigation } from "../../variousUtils.tsx";
+import { fetchProtected, getCookie,Navigation } from "../../variousUtils.tsx";
 import {
     BrowserRouter as Router,
     Routes,
@@ -12,8 +12,7 @@ async function submitAssignment(setStatus: (value:any) => void ){
     const URLForSubmission= window.location.href + `&student=${getCookie("userName")}`
     console.log(URLForSubmission)
     try{
-        let res = await fetch(URLForSubmission,{method:'PUT'})
-        let resJson = await res.json()
+        let resJson = await fetchProtected(URLForSubmission,{method:'PUT'})
         setStatus(resJson.status)
     }
     catch{

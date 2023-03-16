@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getCookie, getResource, InputField, SelectField } from '../../variousUtils.tsx';
+import { fetchProtected, getCookie, getResource, InputField, SelectField } from '../../variousUtils.tsx';
 import {
     Link
   } from "react-router-dom";
@@ -9,7 +9,7 @@ import {
 async function createAssignment(e, assignmentID, classID, questionSetID,today, dateDue, setSubmitStatus){
   e.preventDefault();
   try{
-    let res = await fetch("/create-assignment",{
+    let resJson = await fetchProtected("/create-assignment",{
       body: JSON.stringify({
         assignmentID:assignmentID,
         classID:classID,
@@ -20,8 +20,8 @@ async function createAssignment(e, assignmentID, classID, questionSetID,today, d
       method:'POST',
       headers: {contentType: 'application/json'}
     })
-    let resJson = await res.json();
     setSubmitStatus(resJson.status)
+    console.log("Set status")
   }
   catch{
     console.log("Failed to parse response")
@@ -52,6 +52,7 @@ function CreateAssignment(){
   return(
     <header className="App-header">
       <h1>Create an assignment</h1>
+      <button onClick={() =>{console.log(classID)}}>WIRUGJOWU</button>
       <form onSubmit={(e) => createAssignment(e, assignmentID,classID, questionSetID,today, dateDue, setSubmitStatus)}>
         <InputField inputValue={assignmentID} setter={setAssignmentID} placeholder="Assignment ID"/>
         <label>Due date:

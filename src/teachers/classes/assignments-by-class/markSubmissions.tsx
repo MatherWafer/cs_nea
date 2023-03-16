@@ -1,16 +1,18 @@
-import { getCookie, getResource, InputField, ListOfObjects } from "../../../variousUtils.tsx";
+import { getCookie, getResource, InputField, ListOfObjects, fetchProtected } from "../../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useEffect, useState} from "react"
 import React from "react";
+import { markAsUntransferable } from "worker_threads";
 
 async function getDataForMarking(setQuestionList,setAnswers,setMarks){
     const URLForSubmission = window.location.href
-    let res = await fetch(URLForSubmission,{method:"GET"})
+    
     try{
-        let resJson = await res.json()  
+        let resJson = await fetchProtected(URLForSubmission,{method:"GET"})
         setQuestionList(resJson.questions)
         if(resJson.answers != "NULLANSWERS"){
             let userAnswers = JSON.parse(resJson.answers)
+            console.log(userAnswers)
             setAnswers(userAnswers)
         }
         if(resJson.marks != "NullMarks"){
@@ -26,12 +28,10 @@ async function getDataForMarking(setQuestionList,setAnswers,setMarks){
 
 async function returnSubmission(marks,setStatus){
     const URLForSubmission= window.location.href 
-    console.log(URLForSubmission)
     try{
         let requestParams = {method:'PUT',
                          body:JSON.stringify({marks:marks})}
-        let res = await fetch(URLForSubmission,requestParams)
-        let resJson = await res.json()
+        let resJson = await fetchProtected(URLForSubmission,requestParams)
         setStatus(resJson.status)
     }
     catch{
@@ -46,28 +46,26 @@ function QuestionView(props){
     let questionNum = props.num
     let setMarkForQuestion= props.setMarkForQuestion
     let q = props.question
-    let questionText = q.questionText
-    let questionAnswer =  q.questionAnswer
-    let maxMarks = q.marksAvailable
-    let userAnswer = props.question.userAnswer
-    const [mark,setMark] = useState(0)
+    let mark:number = props.mark
     return(
         <div style={{width:"50%",backgroundColor:"#242424b8", padding:"30px",outline:"solid",outlineColor:"rgba(255, 255, 255, 0.42)",}}>
-            <h3>{questionText}</h3>
-            <h3>Answer: {questionAnswer}</h3>
-            <h3>User answered: {props.userAnswer}</h3>
-            <h3>Max marks: {maxMarks}</h3>
-            {(maxMarks === 1)? 
+            <h3>{q.questionText}</h3>
+            <h3>Answer: {q.questionAnswer}</h3>
+            <h3>User answered: {q.userAnswer}</h3>
+            <h3>Max marks: {q.marksAvailable}</h3>
+            {(q.marksAvailable === 1)? 
               (
               <>
-              <button onClick={() => {setMark((mark + 1) % 2)}}>{mark===1?"Award mark": "Remove mark"}</button>
+              <button onClick={() => {setMarkForQuestion(questionNum + 1,(mark + 1) % 2)}}>{mark===0?"Award mark": "Remove mark"}</button>
               <p>Marks given: {mark}</p>
               </>
               )
              :(
-             <InputField minValue={0} maxValue={maxMarks}type="number" inputValue={mark} setter={setMark} placeholder="Marks to award"/>)
+            <>
+             <InputField minValue={0} maxValue={q.marksAvailable}type="number" inputValue={mark} setter={(e) => setMarkForQuestion(questionNum + 1,e)} placeholder="Marks to award"/>
+             <p>Marks given: {mark}</p>
+            </>)
               }
-            <button onClick={() => {setMarkForQuestion(questionNum,mark)}}>SaveMarks</button>
         </div>
     )
 }
@@ -99,24 +97,33 @@ function MarkSubmission(){
         currentState[number] = mark
         setMarks(currentState)
     }
-
     useEffect((() => {getDataForMarking(setQuestionList,setAnswers,setMarks)}),[])
+    
+    let questionsForView = questionList.map((question,index) => <QuestionView num={index}
+                                                                              question={question}
+                                                                              userAnswer={answers[String(index+1)]}
+                                                                              setMarkForQuestion={setMarkForQuestion}
+                                                                              mark={marks[questionNumber] || 0}
+                                                                              marksAwarded = {marks}
+                                                                              setMarksAwarded ={setMarks}
+                                                                              />)
+                                                                
     return(
         <header className="App-header">
             <h1>{studentID} {assignmentID}</h1>
             <h1> Question {questionNumber} of {questionList.length}</h1>
-            {questionList.length > 0 ? <QuestionView num={questionNumber}
-                                         question={questionList[questionNumber - 1]} 
-                                         userAnswer={answers[questionNumber]}
-                                         setMarkForQuestion={setMarkForQuestion}/>
+            {questionList.length > 0 ? questionsForView[questionNumber - 1]
              :
              null}
             <div>
                 <button onClick={() => {changeQuestion(-1, questionList.length)}}>Previous</button>
                 <button style ={{margin:"10px"}} onClick={() => changeQuestion(1, questionList.length)}> Next </button>
             </div>
-            <button onClick={() => {returnSubmission(marks,setStatus)}}>HI</button>
-            {status===200? <p>Successs</p>:null}
+            <button onClick={() => {returnSubmission(marks,setStatus)}}>Return to user</button>
+            {status===200? 
+            <>
+            <p>Successs</p>
+            </>:null}
         </header>
     )
 }

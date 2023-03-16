@@ -231,6 +231,7 @@ function KruskalsAlgorithm(props){
     }
     const qNum = Number(props.qNum)
     const setResult = props.setResult
+    const questionsCorrect = props.questionsCorrect
     const removeRow = () => {
       if(numRows > 1){
         setNumrows(numRows - 1)
@@ -239,7 +240,7 @@ function KruskalsAlgorithm(props){
     }
 
     const checkViewedEdges = () => checkIfListsEquivalent(userEdgesChecked,mst.viewed)
-    const questionsCorrect = props.questionsCorrect
+    
     function setRow(index,value){
       let newUserEdgesChecked = userEdgesChecked
       newUserEdgesChecked[index] = value

@@ -1,4 +1,4 @@
-import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
+import { fetchProtected, getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useEffect, useState, useReducer} from "react"
 import React from "react";
@@ -21,9 +21,8 @@ import React from "react";
 
 async function getSubmission(setQuestionList,setAnswers,setCompletion){
     const URLForSubmission= window.location.href + `&student=${getCookie("userName")}`
-    let res = await fetch(URLForSubmission,{method:"GET"})
     try{
-        let resJson = await res.json()  
+        let resJson = await fetchProtected(URLForSubmission,{method:"GET"})
         setQuestionList(resJson.questions)
         if(resJson.answers != "NULLANSWERS"){
             let newAnswers = JSON.parse(resJson.answers)
@@ -45,9 +44,8 @@ async function getDataForReview(setMarksAwarded,setCorrectAnswers){
     let URLParams = new URLSearchParams(window.location.search)
     let assignmentID = URLParams.get("assignmentID")
     const URLForReview = `/review-submission?assignment=${assignmentID}&student=${getCookie("userName")}`
-    let res = await fetch(URLForReview,{method:"GET"})
     try{
-        let resJson = await res.json()  
+        let resJson = await fetchProtected(URLForReview,{method:"GET"})
         if(resJson.answers != "NULLANSWERS"){
             setMarksAwarded(JSON.parse(resJson.marks))
             setCorrectAnswers(resJson.solutions)
@@ -60,9 +58,8 @@ async function getDataForReview(setMarksAwarded,setCorrectAnswers){
 async function submitAnswers(answers, setStatus){
     const URLForSubmission = window.location.href + `&student=${getCookie("userName")}`
     try{
-        let res = await fetch(URLForSubmission,{method:"PUT",
+        let resJson = await fetchProtected(URLForSubmission,{method:"PUT",
                                                 body:JSON.stringify({answers:answers})})
-        let resJson = await res.json()
         setStatus(resJson.status)
     }
     catch{

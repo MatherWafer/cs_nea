@@ -1,5 +1,24 @@
-import { Component } from "react";
+import {useState, Component } from "react";
 import {Navigate,Link} from "react-router-dom"
+
+
+
+const checkStoredToken = async ():Promise<[boolean,boolean]> => {
+    let storedToken = localStorage.getItem('token')
+    console.log(storedToken)
+    if (storedToken != null){
+        let authHeader = {
+          Authorization: 'Bearer ' + storedToken
+        }
+        let res = await fetch('/check-stored-token',{headers:authHeader})
+        let resJSON = await res.json()
+        if (resJSON.status == 200){
+          return [true,resJSON["is_teacher"]]
+        }
+    }
+      return [false,false]
+  }
+
 
 function getCookie(nameOfCookie){
     let nameToFind = nameOfCookie +"=";
@@ -24,16 +43,18 @@ interface TabProps{
 }
 
 const TeacherTab = (props:TabProps) => {
-    if (getCookie("isTeacher") === "true"){
+    /*if(getCookie("isTeacher") === "true"){
         return props.component
-    }
+    }*/
+    return props.component
     return <Navigate to="/teacher-login" replace/>
 }
 
 const StudentTab = (props:TabProps) => {
-    if (getCookie("userName") !== "notSet" && getCookie("isTeacher") === "false"){
+    /*if (getCookie("userName") !== "notSet" && getCookie("isTeacher") === "false"){
         return props.component
-    }
+    }*/
+    return props.component
     return <Navigate to="/login" replace/>
 }
 
@@ -152,8 +173,14 @@ function NumberField(props:numFieldProps){
 */
 
 async function getResource(resourceURL,resourceName,setter,multipleResources=false){
-    let res = await fetch(resourceURL)
+    let bearerField = 'Bearer ' + localStorage.getItem('token')
+    let authHeader = {Authorization: bearerField}
+    let res = await fetch(resourceURL, {headers:authHeader, method:'GET'})
     let resJson = await res.json()
+    if (resJson.status === 401){
+        window.location.href= "/"
+        return
+    }
     if(!multipleResources){
         if(typeof resJson[resourceName] === "object"){
             let resourceList = resJson[resourceName].map((x) => JSON.parse(x))
@@ -167,6 +194,19 @@ async function getResource(resourceURL,resourceName,setter,multipleResources=fal
     else{
         resourceName.forEach((resource) => {
             setter[resource](resJson[resource])});
+    }
+}
+
+async function fetchProtected (url,options){
+    let bearerField = 'Bearer ' + localStorage.getItem('token')
+    options.headers = {Authorization: bearerField}
+    let res = await fetch(url,options)
+    let resJSON = await res.json()
+    if (resJSON.status === 501){
+        window.location.href = "/"
+    }
+    else{
+        return resJSON
     }
 }
 
@@ -220,4 +260,36 @@ function ListOfObjects(props:objectListProps){
 
 
 
-export {getCookie,TeacherTab,StudentTab,Navigation,InputField, SelectField, NumberField, getResource,ObjectOverview, ListOfObjects};
+function useToken() {
+
+  function getToken() {
+    const userToken = localStorage.getItem('token');
+    return userToken && userToken
+  }
+
+  const [token, setToken] = useState(getToken());
+
+  function saveToken(userToken) {
+    localStorage.setItem('token', userToken);
+    setToken(userToken);
+  };
+
+  function removeToken() {
+    localStorage.removeItem("token");
+    setToken(null);
+  }
+
+  return {
+    setToken: saveToken,
+    token,
+    removeToken
+  }
+
+}
+
+
+
+
+
+
+export {getCookie,TeacherTab,StudentTab,Navigation,InputField, SelectField, NumberField, getResource,ObjectOverview, ListOfObjects, useToken, fetchProtected, checkStoredToken};

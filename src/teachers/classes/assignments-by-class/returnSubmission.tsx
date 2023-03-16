@@ -11,7 +11,7 @@ async function returnSubmission(setStatus){
     const URLForSubmission= window.location.href 
     console.log(URLForSubmission)
     try{
-        let res = await fetch(URLForSubmission,{method:'PUT'})
+        let res = await fetchProtected(URLForSubmission,{method:'PUT'})
         let resJson = await res.json()
         setStatus(resJson.status)
     }

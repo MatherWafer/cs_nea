@@ -5,7 +5,7 @@ import GraphIntersect from "../questions/graphsIntersection.tsx";
 import { JsxElement } from "typescript";
 import { parse } from "path";
 import { type } from "os";
-import { getCookie } from "../../variousUtils.tsx";
+import { fetchProtected, getCookie } from "../../variousUtils.tsx";
 const assignmentsToQuestions = {
     "KruskalAlgorithm": KruskalsAlgorithm,
     "GraphIntersections": GraphIntersect
@@ -71,8 +71,7 @@ async function submitResults(event, questionsCorrect){
     event.preventDefault()     
     console.log(questionsCorrect)                  
     try{
-        let res = await fetch(`/practice-mode?student=${userID}`, requestData)
-        let resJSon = await res.json()
+        let resJSon = await fetchProtected(`/practice-mode?student=${userID}`, requestData)
         if(resJSon.status === 200){
             console.log("ALl good")
         }

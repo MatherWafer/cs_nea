@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
+import { getCookie, getResource, InputField, ListOfObjects, fetchProtected } from "../../variousUtils.tsx";
 
 
 
@@ -20,9 +20,8 @@ async function setNewText(textToAdd, newMarks, newSolution, setStatus, setQuesti
             newMarks:newMarks
         })
     }
-    let res = await fetch(URLForQuestion, requestParams)
     try{
-        let resJson = await res.json()
+        let resJson = await fetchProtected(URLForQuestion, requestParams)
         setStatus(resJson.status)
         setQuestionText(textToAdd)
         setPrevMark(newMarks)

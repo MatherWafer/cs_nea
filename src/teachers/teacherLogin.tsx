@@ -1,12 +1,24 @@
 import React, { useState, useEffect} from 'react';
 import {Link,Navigate} from "react-router-dom"
-import {getCookie, InputField} from '../variousUtils.tsx'
+import {getCookie, InputField, useToken, checkStoredToken} from '../variousUtils.tsx'
 
-function TeacherLogin({setIsTeacher}){
+interface TeacherLoginProps{
+    setSignedIn: React.Dispatch<React.SetStateAction<boolean>>
+    setIsTeacher: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const checkIfAlreadyLoggedIn = async () =>{
+    let [isSignedIn,isTeacher] = await checkStoredToken()
+    if (isSignedIn){
+        window.location.href = "/"
+    }
+}
+
+function TeacherLogin(props:TeacherLoginProps){
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [response,setResponse] = useState(0)
-
+    const {setToken, token, removeToken} = useToken()
     const msgs =  {
              209: <p style={{color:"white"}}>That username does not exist</p>,
              400: <p style={{color:"#CC0000"}}>Incorrect Password.</p>
@@ -34,12 +46,16 @@ function TeacherLogin({setIsTeacher}){
             {
                 console.log("Successful Login")
                 console.log(resJson["user-data"])
-                let studentData = JSON.parse(resJson["user-data"]);
-                document.cookie = `userName=${studentData.TeacherID}`
-                document.cookie = `forename=${studentData.Forename}`
-                document.cookie = `surname=${studentData.Surname}`
-                setIsTeacher(true)
+                let teacherData = JSON.parse(resJson["user-data"]);
+                document.cookie = `userName=${teacherData.TeacherID}`
+                document.cookie = `forename=${teacherData.Forename}`
+                document.cookie = `surname=${teacherData.Surname}`
+                props.setIsTeacher(true)
+                props.setSignedIn(true)
+                console.log(resJson.access_token)
+                setToken(resJson.access_token)
                 document.cookie = "isTeacher=true"
+                window.location.href = "/"
             }
             else if(resJson.status === 400){
                 console.log("Incorrect Password")
@@ -54,8 +70,8 @@ function TeacherLogin({setIsTeacher}){
         }
         }
     
-    
-    return getCookie('userName') === null && getCookie('isTeacher') != "true"   ?
+    useEffect(()=>{checkIfAlreadyLoggedIn()},[])
+    return (
         <div className='App'>
             <header className="App-header">
                 <h1>Teacher log in:</h1>
@@ -69,15 +85,7 @@ function TeacherLogin({setIsTeacher}){
 
             </header>
         </div>
-
-
-        :
-        <header className='App-header'>
-            <Navigate to="/teacher-homepage">Homepage</Navigate>
-        </header>
-    
-
-    
+    )
 }
 
 export default TeacherLogin;

@@ -1,4 +1,4 @@
-import { getCookie, getResource, InputField, ListOfObjects } from "../../variousUtils.tsx";
+import { getCookie, getResource, InputField, ListOfObjects, fetchProtected } from "../../variousUtils.tsx";
 import { Link } from "react-router-dom";
 import {useEffect, useState} from "react"
 import React from "react";
@@ -45,11 +45,10 @@ const enrollStudent = async (event,IDtoAdd) =>{
     let classID = URLParams.get('class')
     event.preventDefault()
     try{
-        let res = await fetch(`/manage-class?class=${classID}`,{
+        let resJson = await fetchProtected(`/manage-class?class=${classID}`,{
             method: 'PUT',
             body: JSON.stringify({studentID:IDtoAdd})
         });
-        let resJson = await res.json()
         if (resJson.status === 200){
             console.log("All good")
         }
@@ -105,7 +104,7 @@ function ManageClass(){
 
 export default ManageClass;
 /*
-fetch('/manage-class?class=TESTCLASS',{
+fetchProtected('/manage-class?class=TESTCLASS',{
     method: 'PUT',
     body:JSON.stringify({
         studentID:"ASDA"
